@@ -8,3 +8,5 @@ __pycache__
 package-lock.json
 debug.sh
 .idea/
+dotnet/bin
+dotnet/obj
