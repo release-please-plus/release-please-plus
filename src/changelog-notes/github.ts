@@ -30,7 +30,7 @@ export class GitHubChangelogNotes implements ChangelogNotes {
       options.targetBranch,
       options.previousTag
     );
-    const date = new Date().toLocaleDateString('en-CA');
+    const date = new Date().toLocaleDateString('fr-CA');
     const header = `## ${options.version} (${date})`;
     return `${header}\n\n${body}`;
   }
