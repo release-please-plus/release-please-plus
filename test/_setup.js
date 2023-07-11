@@ -20,7 +20,6 @@ const {jestSnapshotPlugin} = require('mocha-chai-jest-snapshot');
 chai.use(
   jestSnapshotPlugin({
     moduleFileExtensions: ['js'],
-    // snapshotResolver: '<rootDir>/build/test/_snapshotResolver.js',
-    // snapshotResolver: '<rootDir>/build/test/_myResolver.js',
+    snapshotResolver: '<rootDir>/test/_myResolver.js',
   })
 );

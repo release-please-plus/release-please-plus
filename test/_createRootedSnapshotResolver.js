@@ -4,19 +4,21 @@
 // This resolves tests in the merged build output to the snapshot in their
 // source tree. This ensures we update the correct snapshot.
 exports.createSnapshotResolver = (
-  dirname: string,
-  rootPath: string,
-  includeSnapExtension = true
+  sourcePath,
+  rootPath,
+  includeSnapExtension = false
 ) => {
   const path = require('path');
   return {
-    resolveSnapshotPath: (testPath: string, snapshotExtension: string) => {
+    //C:\\Data\\Git\\release-please-plus
+    //C:\\Data\\Git\\release-please-plus\\build\\test\\strategies\\dotnet-yoshi.js'
+    resolveSnapshotPath: (testPath, snapshotExtension) => {
       const testDir = path.dirname(testPath);
 
       let testSrcDir = testDir;
 
-      if (testDir.startsWith(dirname)) {
-        testSrcDir = testDir.replace(dirname, '');
+      if (testDir.startsWith(sourcePath)) {
+        testSrcDir = testDir.replace(sourcePath, '');
       }
       const testFile = path.basename(testPath);
 
@@ -26,7 +28,7 @@ exports.createSnapshotResolver = (
       );
     },
 
-    resolveTestPath: (snapshotFilePath: string, snapshotExtension: string) => {
+    resolveTestPath: (snapshotFilePath, snapshotExtension) => {
       let relative = snapshotFilePath
         .replace(rootPath + path.sep, '')
         .replace('__snapshots__' + path.sep, '');
@@ -35,10 +37,10 @@ exports.createSnapshotResolver = (
         relative = relative.slice(0, -snapshotExtension.length);
       }
 
-      return path.join(dirname, relative);
+      return path.join(sourcePath, relative);
     },
     testPathForConsistencyCheck:
-      'C:\\Data\\Git\\release-please-plus\\build\\test\\sub\\manifest.js',
+      'C:\\Data\\Git\\release-please-plus\\build\\test\\strategies\\dotnet-yoshi.js',
 
     // testPathForConsistencyCheck: path.join(
     //   'Libraries',

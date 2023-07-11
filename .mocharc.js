@@ -17,8 +17,8 @@ const config = {
   timeout: 10000,
   recursive: true,
   'node-option': 'no-experimental-fetch',
-  require: 'test/_fetch-polyfill.js',
-  file: 'test/_setup.js',
+  require: './test/_fetch-polyfill.js',
+  file: './test/_setup.js',
 };
 if (process.env.MOCHA_THROW_DEPRECATION === 'false') {
   delete config['throw-deprecation'];
