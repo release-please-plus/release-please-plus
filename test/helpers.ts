@@ -16,7 +16,6 @@ import {readFileSync, readdirSync, statSync} from 'fs';
 import {resolve, posix} from 'path';
 import * as crypto from 'crypto';
 import * as sinon from 'sinon';
-import * as snapshot from 'snap-shot-it';
 import * as suggester from 'code-suggester';
 import {CreatePullRequestUserOptions} from 'code-suggester/build/src/types';
 import {Octokit} from '@octokit/rest';
@@ -45,7 +44,7 @@ import {PullRequest} from '../src/pull-request';
 
 export function stubSuggesterWithSnapshot(
   sandbox: sinon.SinonSandbox,
-  snapName: string
+  _snapName: string
 ) {
   sandbox.replace(
     suggester,
@@ -55,15 +54,20 @@ export function stubSuggesterWithSnapshot(
       changes: suggester.Changes | null | undefined,
       options: CreatePullRequestUserOptions
     ): Promise<number> => {
-      snapshot(snapName + ': changes', stringifyExpectedChanges([...changes!]));
-      snapshot(snapName + ': options', stringifyExpectedOptions(options));
+      console.log('in stub');
+      console.log(stringifyExpectedChanges([...changes!]));
+      // @ts-expect-error no types for snapshot
+      expect(stringifyExpectedChanges([...changes!])).to.matchSnapshot();
+      // @ts-expect-error no types for snapshot
+      expect(stringifyExpectedOptions(options)).to.matchSnapshot();
       return Promise.resolve(22);
     }
   );
 }
 
 export function safeSnapshot(content: string) {
-  snapshot(dateSafe(newLine(content)));
+  // @ts-expect-error no types for snapshot
+  expect(dateSafe(newLine(content))).to.matchSnapshot();
 }
 
 export function dateSafe(content: string): string {
