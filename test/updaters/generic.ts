@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Version} from '../../src/version';
 import {Generic} from '../../src/updaters/generic';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -34,7 +35,7 @@ describe('Generic', () => {
         version: Version.parse('v2.3.4'),
       });
       const newContent = pom.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

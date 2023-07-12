@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {VersionsManifest} from '../../src/updaters/java/versions-manifest';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -35,7 +36,7 @@ describe('JavaAuthVersions', () => {
         versionsMap: versions,
       });
       const newContent = javaAuthVersions.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates versions.txt appropriately for SNAPSHOT release', async () => {
@@ -53,7 +54,7 @@ describe('JavaAuthVersions', () => {
         versionsMap: versions,
       });
       const newContent = javaAuthVersions.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates multiple versions in versions.txt', async () => {
@@ -72,7 +73,7 @@ describe('JavaAuthVersions', () => {
         version: Version.parse('0.25.0'),
       });
       const newContent = javaAuthVersions.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

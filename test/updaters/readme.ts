@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {ReadMe} from '../../src/updaters/terraform/readme';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -32,7 +33,7 @@ describe('README.md', () => {
         version: Version.parse('2.1.0'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

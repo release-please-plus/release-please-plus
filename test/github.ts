@@ -19,7 +19,7 @@ nock.disableNetConnect();
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import * as sinon from 'sinon';
 
 import {GH_API_URL, GitHub, GitHubRelease} from '../src/github';
@@ -137,7 +137,7 @@ describe('GitHub', () => {
         .get('/repos/fake/fake/git/trees/main?recursive=true')
         .reply(200, fileSearchResponse);
       const pomFiles = await github.findFilesByFilename('pom.xml');
-      snapshot(pomFiles);
+      expect(pomFiles).toMatchSnapshot();
       req.done();
     });
 
@@ -177,7 +177,7 @@ describe('GitHub', () => {
         .get('/repos/fake/fake/git/trees/main?recursive=true')
         .reply(200, fileSearchResponse);
       const pomFiles = await github.findFilesByExtension('xml');
-      snapshot(pomFiles);
+      expect(pomFiles).toMatchSnapshot();
       req.done();
     });
 
@@ -262,7 +262,7 @@ describe('GitHub', () => {
       expect(fileContents)
         .to.have.property('sha')
         .equal('2f3d2c47bf49f81aca0df9ffc49524a213a2dc33');
-      snapshot(fileContents);
+      expect(fileContents).toMatchSnapshot();
       req.done();
     });
 
@@ -287,7 +287,7 @@ describe('GitHub', () => {
         pullRequests.push(pullRequest);
       }
       expect(pullRequests).lengthOf(25);
-      snapshot(pullRequests!);
+      expect(pullRequests!).toMatchSnapshot();
       req.done();
     });
     it('handles merged pull requests without files', async () => {
@@ -306,7 +306,7 @@ describe('GitHub', () => {
         pullRequests.push(pullRequest);
       }
       expect(pullRequests).lengthOf(25);
-      snapshot(pullRequests!);
+      expect(pullRequests!).toMatchSnapshot();
       req.done();
     });
     it('uses REST API if files are not needed', async () => {
@@ -363,7 +363,7 @@ describe('GitHub', () => {
         pullRequests.push(pullRequest);
       }
       expect(pullRequests).lengthOf(2);
-      snapshot(pullRequests!);
+      expect(pullRequests!).toMatchSnapshot();
       req.done();
     });
   });
@@ -385,7 +385,7 @@ describe('GitHub', () => {
         }
       );
       expect(commitsSinceSha.length).to.eql(1);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
 
@@ -414,7 +414,7 @@ describe('GitHub', () => {
         }
       );
       expect(commitsSinceSha.length).to.eql(11);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
 
@@ -434,7 +434,7 @@ describe('GitHub', () => {
         }
       );
       expect(commitsSinceSha.length).to.eql(3);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
 
@@ -457,7 +457,7 @@ describe('GitHub', () => {
         }
       );
       expect(commitsSinceSha.length).to.eql(10);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
 
@@ -513,7 +513,7 @@ describe('GitHub', () => {
         {backfillFiles: true}
       );
       expect(commitsSinceSha.length).to.eql(1);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
 
@@ -543,7 +543,7 @@ describe('GitHub', () => {
         {backfillFiles: true}
       );
       expect(commitsSinceSha.length).to.eql(1);
-      snapshot(commitsSinceSha);
+      expect(commitsSinceSha).toMatchSnapshot();
       req.done();
     });
   });
@@ -565,7 +565,7 @@ describe('GitHub', () => {
         commits.push(commit);
       }
       expect(commits).lengthOf(2);
-      snapshot(commits!);
+      expect(commits!).toMatchSnapshot();
       req.done();
     });
   });
@@ -680,7 +680,7 @@ describe('GitHub', () => {
     it('should create a release with a package prefix', async () => {
       req
         .post('/repos/fake/fake/releases', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(200, {
@@ -723,7 +723,7 @@ describe('GitHub', () => {
     it('should raise a DuplicateReleaseError if already_exists', async () => {
       req
         .post('/repos/fake/fake/releases', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(422, {
@@ -757,7 +757,7 @@ describe('GitHub', () => {
     it('should raise a RequestError for other validation errors', async () => {
       req
         .post('/repos/fake/fake/releases', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(422, {
@@ -784,7 +784,7 @@ describe('GitHub', () => {
     it('should create a draft release', async () => {
       req
         .post('/repos/fake/fake/releases', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(200, {
@@ -823,7 +823,7 @@ describe('GitHub', () => {
     it('should create a prerelease release', async () => {
       req
         .post('/repos/fake/fake/releases', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(200, {
@@ -871,7 +871,7 @@ describe('GitHub', () => {
       );
       req
         .post('/repos/fake/fake/issues/1347/comments', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return true;
         })
         .reply(201, createCommentResponse);
@@ -899,7 +899,7 @@ describe('GitHub', () => {
     it('can generate notes with previous tag', async () => {
       req
         .post('/repos/fake/fake/releases/generate-notes', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return body;
         })
         .reply(200, {
@@ -918,7 +918,7 @@ describe('GitHub', () => {
     it('can generate notes without previous tag', async () => {
       req
         .post('/repos/fake/fake/releases/generate-notes', body => {
-          snapshot(body);
+          expect(body).toMatchSnapshot();
           return body;
         })
         .reply(200, {

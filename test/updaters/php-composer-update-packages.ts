@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as snapshot from 'snap-shot-it';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {RootComposerUpdatePackages} from '../../src/updaters/php/root-composer-update-packages';
@@ -36,7 +35,7 @@ describe('PHPComposer', () => {
         '{"version":"1.0.0","replace":{"version":"1.0.0"}}'
       );
 
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('update all versions in composer.json', async () => {
@@ -57,7 +56,7 @@ describe('PHPComposer', () => {
         '{"version":"1.0.0","replace":{"version":"1.0.0"}}'
       );
 
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('update root version in composer.json', async () => {
@@ -76,7 +75,7 @@ describe('PHPComposer', () => {
 
       expect(newContent).to.eq('{"version":"1.0.0"}');
 
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('update replace version in composer.json when version is present', async () => {
@@ -95,7 +94,7 @@ describe('PHPComposer', () => {
 
       expect(newContent).to.eq('{"replace":{"version":"1.0.0"}}');
 
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('update replace version in composer.json when version is missing', async () => {
@@ -114,7 +113,7 @@ describe('PHPComposer', () => {
 
       expect(newContent).to.eq('{"replace":{"version":"1.0.0"}}');
 
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {VersionRB} from '../../src/updaters/ruby/version-rb';
@@ -64,7 +64,7 @@ describe('version.rb', () => {
         version: Version.parse('0.6.0'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates content with single quotes in version.rb', async () => {
@@ -78,7 +78,7 @@ describe('version.rb', () => {
         version: Version.parse('0.6.0'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates long patch versions in version.rb', async () => {
@@ -90,7 +90,7 @@ describe('version.rb', () => {
         version: Version.parse('0.6.11'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates prerelease versions in version.rb', async () => {
@@ -102,7 +102,7 @@ describe('version.rb', () => {
         version: Version.parse('10.0.0-alpha1'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

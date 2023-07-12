@@ -31,7 +31,6 @@ import {
   buildGitHubFileRaw,
 } from '../helpers';
 import {RawContent} from '../../src/updaters/raw-content';
-import snapshot = require('snap-shot-it');
 import {ManifestPlugin} from '../../src/plugin';
 import {Changelog} from '../../src/updaters/changelog';
 import {ReleasePleaseManifest} from '../../src/updaters/release-please-manifest';
@@ -144,7 +143,9 @@ describe('NodeWorkspace plugin', () => {
       expect(nodeCandidate).to.not.be.undefined;
       const updates = nodeCandidate!.pullRequest.updates;
       assertHasUpdate(updates, 'node1/package.json');
-      snapshot(dateSafe(nodeCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(nodeCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('respects version prefix', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -183,7 +184,7 @@ describe('NodeWorkspace plugin', () => {
         RawContent
       );
       const updater = update.updater as RawContent;
-      snapshot(updater.rawContent);
+      expect(updater.rawContent).toMatchSnapshot();
     });
     it('combines node packages', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -233,7 +234,9 @@ describe('NodeWorkspace plugin', () => {
       assertHasUpdate(updates, 'package.json');
       assertHasUpdate(updates, 'node1/package.json');
       assertHasUpdate(updates, 'node4/package.json');
-      snapshot(dateSafe(nodeCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(nodeCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('walks dependency tree and updates previously untouched packages', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -299,7 +302,9 @@ describe('NodeWorkspace plugin', () => {
       expect(updater.versionsMap?.get('node2')?.toString()).to.eql('2.2.3');
       expect(updater.versionsMap?.get('node3')?.toString()).to.eql('1.1.2');
       expect(updater.versionsMap?.get('node5')?.toString()).to.eql('1.0.1');
-      snapshot(dateSafe(nodeCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(nodeCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('appends dependency notes to an updated module', async () => {
       const existingNotes =
@@ -363,13 +368,15 @@ describe('NodeWorkspace plugin', () => {
         '1.1.2'
       );
       assertNoHasUpdate(updates, 'node4/package.json');
-      snapshot(dateSafe(nodeCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(nodeCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
       const update = assertHasUpdate(updates, 'node1/CHANGELOG.md', Changelog);
-      snapshot((update.updater as Changelog).changelogEntry);
+      expect((update.updater as Changelog).changelogEntry).toMatchSnapshot();
       const update2 = assertHasUpdate(updates, 'node2/CHANGELOG.md', Changelog);
-      snapshot((update2.updater as Changelog).changelogEntry);
+      expect((update2.updater as Changelog).changelogEntry).toMatchSnapshot();
       const update3 = assertHasUpdate(updates, 'node3/CHANGELOG.md', Changelog);
-      snapshot((update3.updater as Changelog).changelogEntry);
+      expect((update3.updater as Changelog).changelogEntry).toMatchSnapshot();
     });
     it('should ignore peer dependencies', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -405,7 +412,9 @@ describe('NodeWorkspace plugin', () => {
       const updates = nodeCandidate!.pullRequest.updates;
       assertHasUpdate(updates, 'node1/package.json');
       assertNoHasUpdate(updates, 'plugin1/package.json');
-      snapshot(dateSafe(nodeCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(nodeCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
   });
 });

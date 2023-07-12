@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {PHPClientVersion} from '../../src/updaters/php/php-client-version';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures/php';
 
@@ -32,7 +33,7 @@ describe('PHPManifest', () => {
         version: Version.parse('0.8.0'),
       });
       const newContent = composer.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('update version in ServiceBuilder.php files', async () => {
       const oldContent = readFileSync(
@@ -43,7 +44,7 @@ describe('PHPManifest', () => {
         version: Version.parse('0.8.0'),
       });
       const newContent = composer.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

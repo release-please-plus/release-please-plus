@@ -30,7 +30,6 @@ import {Version} from '../../src/version';
 import {ManifestPlugin} from '../../src/plugin';
 import {CargoWorkspace} from '../../src/plugins/cargo-workspace';
 import {expect} from 'chai';
-import snapshot = require('snap-shot-it');
 import {RawContent} from '../../src/updaters/raw-content';
 import {CargoToml} from '../../src/updaters/rust/cargo-toml';
 import {parseCargoManifest} from '../../src/updaters/rust/common';
@@ -135,7 +134,9 @@ describe('CargoWorkspace plugin', () => {
       const updates = rustCandidate!.pullRequest.updates;
       assertHasUpdate(updates, 'packages/rustA/Cargo.toml');
       assertHasUpdate(updates, 'Cargo.lock');
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('combines rust packages', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -195,7 +196,9 @@ describe('CargoWorkspace plugin', () => {
       const updates = rustCandidate!.pullRequest.updates;
       assertHasUpdate(updates, 'packages/rustA/Cargo.toml');
       assertHasUpdate(updates, 'packages/rustD/Cargo.toml');
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('handles glob paths', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -248,7 +251,9 @@ describe('CargoWorkspace plugin', () => {
       const updates = rustCandidate!.pullRequest.updates;
       assertHasUpdate(updates, 'packages/rustA/Cargo.toml');
       assertHasUpdate(updates, 'packages/rustD/Cargo.toml');
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('walks dependency tree and updates previously untouched packages', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -310,7 +315,9 @@ describe('CargoWorkspace plugin', () => {
       assertHasUpdate(updates, 'packages/rustC/Cargo.toml', RawContent);
       assertHasUpdate(updates, 'packages/rustD/Cargo.toml', RawContent);
       assertHasUpdate(updates, 'packages/rustE/Cargo.toml', RawContent);
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('can skip merging rust packages', async () => {
       // This is the same setup as 'walks dependency tree and updates previously untouched packages'
@@ -444,7 +451,9 @@ describe('CargoWorkspace plugin', () => {
       assertHasUpdate(updates, 'packages/rustB/Cargo.toml', RawContent);
       assertHasUpdate(updates, 'packages/rustC/Cargo.toml', RawContent);
       assertHasUpdate(updates, 'packages/rustE/Cargo.toml', RawContent);
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('skips component if not touched', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -496,7 +505,9 @@ describe('CargoWorkspace plugin', () => {
       assertNoHasUpdate(updates, 'packages/rustA/Cargo.toml');
       assertNoHasUpdate(updates, 'packages/rustE/Cargo.toml');
       assertHasUpdate(updates, 'packages/rustB/Cargo.toml', RawContent);
-      snapshot(dateSafe(rustCandidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(rustCandidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
     it('handles packages without version', async () => {
       const candidates: CandidateReleasePullRequest[] = [

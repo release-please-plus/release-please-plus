@@ -32,7 +32,6 @@ import {PackageJson} from '../../src/updaters/node/package-json';
 import {ChangelogJson} from '../../src/updaters/changelog-json';
 import * as assert from 'assert';
 import {MissingRequiredFileError, FileNotFoundError} from '../../src/errors';
-import * as snapshot from 'snap-shot-it';
 
 nock.disableNetConnect();
 const sandbox = sinon.createSandbox();
@@ -210,12 +209,12 @@ describe('Node', () => {
       const newContent = update.updater.updateContent(
         JSON.stringify({entries: []})
       );
-      snapshot(
+      expect(
         newContent
           .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
           .replace(UUID_REGEX, 'abc-123-efd-qwerty')
           .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-      );
+      ).toMatchSnapshot();
     });
   });
   describe('buildUpdates', () => {

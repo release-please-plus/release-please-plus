@@ -30,8 +30,6 @@ import {JavaUpdate} from '../../src/updaters/java/java-update';
 import {VersionsManifest} from '../../src/updaters/java/versions-manifest';
 import {CompositeUpdater} from '../../src/updaters/composite';
 
-import * as snapshot from 'snap-shot-it';
-
 const sandbox = sinon.createSandbox();
 const fixturesPath = './test/fixtures/strategies/java-yoshi';
 
@@ -375,12 +373,12 @@ describe('JavaYoshiMonoRepo', () => {
       const newContent = update.updater.updateContent(
         JSON.stringify({entries: []})
       );
-      snapshot(
+      expect(
         newContent
           .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
           .replace(UUID_REGEX, 'abc-123-efd-qwerty')
           .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-      );
+      ).toMatchSnapshot();
     });
 
     it('omits non-breaking chores from changelog.json', async () => {
@@ -435,12 +433,12 @@ describe('JavaYoshiMonoRepo', () => {
       const newContent = update.updater.updateContent(
         JSON.stringify({entries: []})
       );
-      snapshot(
+      expect(
         newContent
           .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
           .replace(UUID_REGEX, 'abc-123-efd-qwerty')
           .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-      );
+      ).toMatchSnapshot();
     });
 
     it('does not update changelog.json if no .repo-metadata.json is found', async () => {
@@ -486,12 +484,12 @@ describe('JavaYoshiMonoRepo', () => {
       const newContent = update.updater.updateContent(
         JSON.stringify({entries: []})
       );
-      snapshot(
+      expect(
         newContent
           .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
           .replace(UUID_REGEX, 'abc-123-efd-qwerty')
           .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-      );
+      ).toMatchSnapshot();
     });
   });
 });

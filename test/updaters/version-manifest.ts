@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {VersionsManifest} from '../../src/updaters/java/versions-manifest';
 import {expect} from 'chai';
@@ -80,7 +80,7 @@ describe('VersionManifest', () => {
         version: Version.parse('1.2.3'),
       });
       const newContent = javaAuthVersions.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

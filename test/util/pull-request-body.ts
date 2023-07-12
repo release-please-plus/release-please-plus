@@ -17,7 +17,6 @@ import {expect} from 'chai';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {PullRequestBody} from '../../src/util/pull-request-body';
-import snapshot = require('snap-shot-it');
 import {Version} from '../../src/version';
 
 const fixturesPath = './test/fixtures/release-notes';
@@ -138,7 +137,7 @@ describe('PullRequestBody', () => {
         },
       ];
       const pullRequestBody = new PullRequestBody(data);
-      snapshot(pullRequestBody.toString());
+      expect(pullRequestBody.toString()).toMatchSnapshot();
     });
 
     it('can handle a single entries', () => {
@@ -150,7 +149,7 @@ describe('PullRequestBody', () => {
         },
       ];
       const pullRequestBody = new PullRequestBody(data);
-      snapshot(pullRequestBody.toString());
+      expect(pullRequestBody.toString()).toMatchSnapshot();
     });
 
     it('can handle a single entries forced components', () => {
@@ -162,7 +161,7 @@ describe('PullRequestBody', () => {
         },
       ];
       const pullRequestBody = new PullRequestBody(data, {useComponents: true});
-      snapshot(pullRequestBody.toString());
+      expect(pullRequestBody.toString()).toMatchSnapshot();
     });
 
     it('can handle a custom header and footer', () => {
@@ -182,7 +181,7 @@ describe('PullRequestBody', () => {
         header: 'My special header!!!',
         footer: 'A custom footer',
       });
-      snapshot(pullRequestBody.toString());
+      expect(pullRequestBody.toString()).toMatchSnapshot();
     });
 
     it('can parse the generated output', () => {
@@ -223,7 +222,7 @@ describe('PullRequestBody', () => {
         },
       ];
       const pullRequestBody = new PullRequestBody(data);
-      snapshot(pullRequestBody.toString());
+      expect(pullRequestBody.toString()).toMatchSnapshot();
     });
   });
 });

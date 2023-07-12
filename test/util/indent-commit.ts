@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {expect} from 'chai';
 import {indentCommit} from '../../src/util/indent-commit';
 import {describe, it} from 'mocha';
-import * as snapshot from 'snap-shot-it';
 
 describe('indentCommit', () => {
   it('handles carriage return', () => {
-    snapshot(
+    expect(
       indentCommit({
         message: `feat: my awesome commit message\r
 * testing one line\r
@@ -26,11 +26,11 @@ describe('indentCommit', () => {
         sha: 'abc123',
         files: [],
       })
-    );
+    ).toMatchSnapshot();
   });
 
   it('only adds lines prefixed with * to CHANGELOG', () => {
-    snapshot(
+    expect(
       indentCommit({
         message: `feat: my awesome commit message
 
@@ -41,11 +41,11 @@ describe('indentCommit', () => {
         sha: 'abc123',
         files: [],
       })
-    );
+    ).toMatchSnapshot();
   });
 
   it('handles multiple lines of multi-line text', () => {
-    snapshot(
+    expect(
       indentCommit({
         message: `feat: my awesome commit message
 * testing one line
@@ -56,6 +56,6 @@ describe('indentCommit', () => {
         sha: 'abc123',
         files: [],
       })
-    );
+    ).toMatchSnapshot();
   });
 });

@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Version} from '../../../src/version';
 import {CsProj} from '../../../src/updaters/dotnet/csproj';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 const FAKE_VERSION = Version.parse('1.2.3');
@@ -33,7 +34,7 @@ describe('CsProj', () => {
         version: FAKE_VERSION,
       });
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('updates a prerelease version', () => {
       const oldContent = readFileSync(
@@ -44,7 +45,7 @@ describe('CsProj', () => {
         version: FAKE_VERSION,
       });
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

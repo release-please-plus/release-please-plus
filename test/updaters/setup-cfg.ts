@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {SetupCfg} from '../../src/updaters/python/setup-cfg';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -32,7 +33,7 @@ describe('setup.cfg', () => {
         version: Version.parse('0.6.0'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('updates big version in setup.cfg', async () => {
       const oldContent = readFileSync(
@@ -43,7 +44,7 @@ describe('setup.cfg', () => {
         version: Version.parse('0.6.0'),
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

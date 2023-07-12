@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Version} from '../../src/version';
 import {
@@ -38,7 +38,7 @@ describe('SfdxProjectJson', () => {
         version: Version.parse('v2.3.4'),
       });
       const newContent = pom.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
       const parsedNewContent = JSON.parse(newContent) as SfdxProjectFile;
       expect(parsedNewContent.packageDirectories[0].versionNumber).to.equal(
         '2.3.4.NEXT'
