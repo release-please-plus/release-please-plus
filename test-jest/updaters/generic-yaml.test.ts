@@ -1,4 +1,4 @@
-// Copyright 2023 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,31 +16,40 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
 import {Version} from '../../src/version';
-import {GenericToml} from '../../src/updaters/generic-toml';
+import {GenericYaml} from '../../src/updaters/generic-yaml';
 
 const fixturesPath = './test/updaters/fixtures';
 
-describe('GenericToml', () => {
+describe('GenericYaml', () => {
   describe('updateContent', () => {
     it('updates matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './Cargo.toml'),
+        resolve(fixturesPath, './helm/Chart.yaml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml(
-        '$.package.version',
+      const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
+      const newContent = updater.updateContent(oldContent);
+      expect(newContent).toMatchSnapshot();
+    });
+    it('updates deep entry in json', async () => {
+      const oldContent = readFileSync(
+        resolve(fixturesPath, './package-lock-v2.json'),
+        'utf8'
+      ).replace(/\r\n/g, '\n');
+      const updater = new GenericYaml(
+        '$.packages..version',
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toMatchSnapshot();
     });
-    it('updates deep entry in toml', async () => {
+    it('updates deep entry in yaml', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './Cargo.toml'),
+        resolve(fixturesPath, './helm/Chart.yaml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml(
-        "$['dev-dependencies']..version",
+      const updater = new GenericYaml(
+        '$.dependencies..version',
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
@@ -48,43 +57,39 @@ describe('GenericToml', () => {
     });
     it('ignores non-matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './Cargo.toml'),
+        resolve(fixturesPath, './helm/Chart.yaml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml('$.nonExistent', Version.parse('v2.3.4'));
+      const updater = new GenericYaml('$.nonExistent', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toEqual(oldContent);
     });
     it('warns on invalid jsonpath', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './Cargo.toml'),
+        resolve(fixturesPath, './helm/Chart.yaml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml('bad jsonpath', Version.parse('v2.3.4'));
-      assert.throws(() => {
+      const updater = new GenericYaml('bad jsonpath', Version.parse('v2.3.4'));
+      expect(() => {
         updater.updateContent(oldContent);
-      });
+      }).toThrow();
     });
     it('ignores invalid file', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './toml/invalid.txt'),
+        resolve(fixturesPath, './yaml/invalid.txt'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml('$.boo', Version.parse('v2.3.4'));
+      const updater = new GenericYaml('$.boo', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toEqual(oldContent);
     });
-    it('updates matching entry with TOML v1.0.0 spec', async () => {
+    it('updates multi-document yaml', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './toml/v1.0.0.toml'),
+        resolve(fixturesPath, './yaml/multi.yaml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericToml(
-        '$.package.version',
-        Version.parse('v2.3.4')
-      );
+      const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
-      expect(newContent).not.toEqual(oldContent);
       expect(newContent).toMatchSnapshot();
     });
   });

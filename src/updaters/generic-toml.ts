@@ -14,9 +14,9 @@
 
 import {Updater} from '../update';
 import {Version} from '../version';
-import * as jp from 'jsonpath';
+import jp from 'jsonpath';
 import {parseWith, replaceTomlValue} from '../util/toml-edit';
-import * as toml from '@iarna/toml';
+import toml from '@iarna/toml';
 import {logger as defaultLogger, Logger} from '../util/logger';
 
 /**

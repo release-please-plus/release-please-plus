@@ -16,40 +16,28 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
 import {Version} from '../../src/version';
-import {GenericYaml} from '../../src/updaters/generic-yaml';
+import {GenericJson} from '../../src/updaters/generic-json';
 
 const fixturesPath = './test/updaters/fixtures';
 
-describe('GenericYaml', () => {
+describe('GenericJson', () => {
   describe('updateContent', () => {
     it('updates matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './helm/Chart.yaml'),
+        resolve(fixturesPath, './esy.json'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
+      const updater = new GenericJson('$.version', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toMatchSnapshot();
     });
-    it('updates deep entry in json', async () => {
+    it('updates deep entry', async () => {
       const oldContent = readFileSync(
         resolve(fixturesPath, './package-lock-v2.json'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml(
+      const updater = new GenericJson(
         '$.packages..version',
-        Version.parse('v2.3.4')
-      );
-      const newContent = updater.updateContent(oldContent);
-      expect(newContent).toMatchSnapshot();
-    });
-    it('updates deep entry in yaml', async () => {
-      const oldContent = readFileSync(
-        resolve(fixturesPath, './helm/Chart.yaml'),
-        'utf8'
-      ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml(
-        '$.dependencies..version',
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
@@ -57,40 +45,22 @@ describe('GenericYaml', () => {
     });
     it('ignores non-matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './helm/Chart.yaml'),
+        resolve(fixturesPath, './esy.json'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml('$.nonExistent', Version.parse('v2.3.4'));
+      const updater = new GenericJson('$.nonExistent', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toEqual(oldContent);
     });
     it('warns on invalid jsonpath', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './helm/Chart.yaml'),
+        resolve(fixturesPath, './esy.json'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml('bad jsonpath', Version.parse('v2.3.4'));
-      assert.throws(() => {
+      const updater = new GenericJson('bad jsonpath', Version.parse('v2.3.4'));
+      expect(() => {
         updater.updateContent(oldContent);
-      });
-    });
-    it('ignores invalid file', async () => {
-      const oldContent = readFileSync(
-        resolve(fixturesPath, './yaml/invalid.txt'),
-        'utf8'
-      ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml('$.boo', Version.parse('v2.3.4'));
-      const newContent = updater.updateContent(oldContent);
-      expect(newContent).toEqual(oldContent);
-    });
-    it('updates multi-document yaml', async () => {
-      const oldContent = readFileSync(
-        resolve(fixturesPath, './yaml/multi.yaml'),
-        'utf8'
-      ).replace(/\r\n/g, '\n');
-      const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
-      const newContent = updater.updateContent(oldContent);
-      expect(newContent).toMatchSnapshot();
+      }).toThrow();
     });
   });
 });

@@ -14,7 +14,7 @@
 
 import {Updater} from '../update';
 import {Version} from '../version';
-import * as jp from 'jsonpath';
+import jp from 'jsonpath';
 import {jsonStringify} from '../util/json-stringify';
 import {logger as defaultLogger, Logger} from '../util/logger';
 

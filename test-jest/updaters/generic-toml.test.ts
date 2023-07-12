@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+// Copyright 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,28 +16,31 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
 import {Version} from '../../src/version';
-import {GenericJson} from '../../src/updaters/generic-json';
+import {GenericToml} from '../../src/updaters/generic-toml';
 
 const fixturesPath = './test/updaters/fixtures';
 
-describe('GenericJson', () => {
+describe('GenericToml', () => {
   describe('updateContent', () => {
     it('updates matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './esy.json'),
+        resolve(fixturesPath, './Cargo.toml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericJson('$.version', Version.parse('v2.3.4'));
+      const updater = new GenericToml(
+        '$.package.version',
+        Version.parse('v2.3.4')
+      );
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toMatchSnapshot();
     });
-    it('updates deep entry', async () => {
+    it('updates deep entry in toml', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './package-lock-v2.json'),
+        resolve(fixturesPath, './Cargo.toml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericJson(
-        '$.packages..version',
+      const updater = new GenericToml(
+        "$['dev-dependencies']..version",
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
@@ -45,22 +48,44 @@ describe('GenericJson', () => {
     });
     it('ignores non-matching entry', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './esy.json'),
+        resolve(fixturesPath, './Cargo.toml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericJson('$.nonExistent', Version.parse('v2.3.4'));
+      const updater = new GenericToml('$.nonExistent', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
       expect(newContent).toEqual(oldContent);
     });
     it('warns on invalid jsonpath', async () => {
       const oldContent = readFileSync(
-        resolve(fixturesPath, './esy.json'),
+        resolve(fixturesPath, './Cargo.toml'),
         'utf8'
       ).replace(/\r\n/g, '\n');
-      const updater = new GenericJson('bad jsonpath', Version.parse('v2.3.4'));
-      assert.throws(() => {
+      const updater = new GenericToml('bad jsonpath', Version.parse('v2.3.4'));
+      expect(() => {
         updater.updateContent(oldContent);
-      });
+      }).toThrow();
+    });
+    it('ignores invalid file', async () => {
+      const oldContent = readFileSync(
+        resolve(fixturesPath, './toml/invalid.txt'),
+        'utf8'
+      ).replace(/\r\n/g, '\n');
+      const updater = new GenericToml('$.boo', Version.parse('v2.3.4'));
+      const newContent = updater.updateContent(oldContent);
+      expect(newContent).toEqual(oldContent);
+    });
+    it('updates matching entry with TOML v1.0.0 spec', async () => {
+      const oldContent = readFileSync(
+        resolve(fixturesPath, './toml/v1.0.0.toml'),
+        'utf8'
+      ).replace(/\r\n/g, '\n');
+      const updater = new GenericToml(
+        '$.package.version',
+        Version.parse('v2.3.4')
+      );
+      const newContent = updater.updateContent(oldContent);
+      expect(newContent).not.toEqual(oldContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });
