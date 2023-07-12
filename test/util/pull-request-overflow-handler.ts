@@ -16,7 +16,7 @@ import {describe, it, beforeEach} from 'mocha';
 import {expect} from 'chai';
 import * as nock from 'nock';
 import * as sinon from 'sinon';
-import * as snapshot from 'snap-shot-it';
+
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {GitHub} from '../../src';
@@ -71,7 +71,7 @@ describe('FilePullRequestOverflowHandler', () => {
         },
         50
       );
-      snapshot(newContents);
+      expect(newContents).toMatchSnapshot();
       sinon.assert.calledOnce(createFileStub);
     });
     it('ignores small pull request body contents', async () => {
@@ -110,7 +110,7 @@ describe('FilePullRequestOverflowHandler', () => {
         files: [],
       });
       expect(pullRequestBody).to.not.be.undefined;
-      snapshot(pullRequestBody!.toString());
+      expect(pullRequestBody!.toString()).toMatchSnapshot();
     });
     it('ignores small pull request body contents', async () => {
       const body = readFileSync(
@@ -127,7 +127,7 @@ describe('FilePullRequestOverflowHandler', () => {
         files: [],
       });
       expect(pullRequestBody).to.not.be.undefined;
-      snapshot(pullRequestBody!.toString());
+      expect(pullRequestBody!.toString()).toMatchSnapshot();
     });
   });
 });

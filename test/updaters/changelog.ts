@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Changelog} from '../../src/updaters/changelog';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -33,7 +34,7 @@ describe('ChangelogUpdater', () => {
         version: Version.parse('1.0.0'),
       });
       const newContent = changelog.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('inserts content at appropriate location if CHANGELOG exists, and last release was a patch', async () => {
@@ -46,7 +47,7 @@ describe('ChangelogUpdater', () => {
         version: Version.parse('1.0.0'),
       });
       const newContent = changelog.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('inserts content at appropriate location in yoshi-ruby style CHANGELOG', async () => {
@@ -59,7 +60,7 @@ describe('ChangelogUpdater', () => {
         version: Version.parse('0.7.0'),
       });
       const newContent = changelog.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('populates a new CHANGELOG if none exists', async () => {
@@ -68,7 +69,7 @@ describe('ChangelogUpdater', () => {
         version: Version.parse('1.0.0'),
       });
       const newContent = changelog.updateContent(undefined);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('inserts content at appropriate location in yoshi-dotnet style CHANGELOG', async () => {
@@ -82,7 +83,7 @@ describe('ChangelogUpdater', () => {
         versionHeaderRegex: '\n## Version [0-9[]+',
       });
       const newContent = changelog.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('prepends CHANGELOG entries if a different style is found', async () => {
@@ -95,7 +96,7 @@ describe('ChangelogUpdater', () => {
         version: Version.parse('1.0.0'),
       });
       const newContent = changelog.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

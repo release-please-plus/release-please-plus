@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {AppJson} from '../../../src/updaters/expo/app-json';
 import {Version} from '../../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -33,7 +34,7 @@ describe('AppJson', () => {
         expoSDKVersion: Version.parse('44.0.0'),
       });
       const newContent = packageJson.updateContent(oldContent);
-      snapshot(newContent.replace(/\r\n/g, '\n'));
+      expect(newContent.replace(/\r\n/g, '\n')).toMatchSnapshot();
     });
   });
 });

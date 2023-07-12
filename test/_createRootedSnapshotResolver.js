@@ -10,8 +10,6 @@ exports.createSnapshotResolver = (
 ) => {
   const path = require('path');
   return {
-    //C:\\Data\\Git\\release-please-plus
-    //C:\\Data\\Git\\release-please-plus\\build\\test\\strategies\\dotnet-yoshi.js'
     resolveSnapshotPath: (testPath, snapshotExtension) => {
       const testDir = path.dirname(testPath);
 
@@ -39,14 +37,10 @@ exports.createSnapshotResolver = (
 
       return path.join(sourcePath, relative);
     },
-    testPathForConsistencyCheck:
-      'C:\\Data\\Git\\release-please-plus\\build\\test\\strategies\\dotnet-yoshi.js',
-
-    // testPathForConsistencyCheck: path.join(
-    //   'Libraries',
-    //   'Lists',
-    //   '__tests__',
-    //   'FlatList-test.js'
-    // ),
+    testPathForConsistencyCheck: path.join(
+      sourcePath,
+      'strategies',
+      'dotnet-yoshi.js'
+    ),
   };
 };

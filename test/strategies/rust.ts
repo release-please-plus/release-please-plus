@@ -24,7 +24,6 @@ import {Version} from '../../src/version';
 import {Changelog} from '../../src/updaters/changelog';
 import {CargoLock} from '../../src/updaters/rust/cargo-lock';
 import {CargoToml} from '../../src/updaters/rust/cargo-toml';
-import snapshot = require('snap-shot-it');
 
 const sandbox = sinon.createSandbox();
 
@@ -109,7 +108,7 @@ describe('Rust', () => {
         latestRelease
       );
       expect(pullRequest!.version?.toString()).to.eql(expectedVersion);
-      snapshot(dateSafe(pullRequest!.body.toString()));
+      expect(dateSafe(pullRequest!.body.toString())).toMatchSnapshot();
     });
   });
 });

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as snapshot from 'snap-shot-it';
 import {describe, it} from 'mocha';
 import {ChangelogJson} from '../../src/updaters/changelog-json';
 import {Version} from '../../src/version';
 import {parseConventionalCommits} from '../../src/commit';
 import {buildMockCommit} from '../helpers';
+import {expect} from 'chai';
 
 const UUID_REGEX =
   /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/g;
@@ -40,12 +40,12 @@ describe('changelog.json', () => {
       language: 'JAVA',
     });
     const newContent = changelogJson.updateContent(oldContent);
-    snapshot(
+    expect(
       newContent
         .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
         .replace(UUID_REGEX, 'abc-123-efd-qwerty')
         .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-    );
+    ).toMatchSnapshot();
   });
   it('prepends latest release to existing changelog', async () => {
     const oldContent = '{"repository": "foo/bar", "entries": [{}, {}]}';
@@ -62,12 +62,12 @@ describe('changelog.json', () => {
       commits: conventionalCommits,
     });
     const newContent = changelogJson.updateContent(oldContent);
-    snapshot(
+    expect(
       newContent
         .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
         .replace(UUID_REGEX, 'abc-123-efd-qwerty')
         .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-    );
+    ).toMatchSnapshot();
   });
   // In discussion with downstream implementers, we decideed that it would
   // make it easier to customize the CHANGELOG generated if we pre-parsed
@@ -87,11 +87,11 @@ describe('changelog.json', () => {
       commits: conventionalCommits,
     });
     const newContent = changelogJson.updateContent(oldContent);
-    snapshot(
+    expect(
       newContent
         .replace(/\r\n/g, '\n') // make newline consistent regardless of OS.
         .replace(UUID_REGEX, 'abc-123-efd-qwerty')
         .replace(ISO_DATE_REGEX, '2023-01-05T16:42:33.446Z')
-    );
+    ).toMatchSnapshot();
   });
 });

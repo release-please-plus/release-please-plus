@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {PackageJson} from '../../src/updaters/node/package-json';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures';
 
@@ -32,7 +33,7 @@ describe('PackageJson', () => {
         version: Version.parse('14.0.0'),
       });
       const newContent = packageJson.updateContent(oldContent);
-      snapshot(newContent.replace(/\r\n/g, '\n'));
+      expect(newContent.replace(/\r\n/g, '\n')).toMatchSnapshot();
     });
   });
 });

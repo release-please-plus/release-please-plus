@@ -1,11 +1,14 @@
-exports['CLI --help github-release 1'] = `
-release-please github-release
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CLI --help github-release 1`] = `
+"release-please github-release
 
 create a GitHub release from a release PR
 
 Options:
   --help                        Show help                              [boolean]
   --version                     Show version number                    [boolean]
+  --update                                            [boolean] [default: false]
   --debug                       print verbose errors (use only for local
                                 debugging).           [boolean] [default: false]
   --trace                       print extra verbose errors (use only for local
@@ -14,9 +17,9 @@ Options:
                                                            [array] [default: []]
   --token                       GitHub token with repo write permissions
   --api-url                     URL to use when making API requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --graphql-url                 URL to use when making GraphQL requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --default-branch              The branch to open release PRs against and tag
                                 releases on
                               [deprecated: use --target-branch instead] [string]
@@ -25,7 +28,7 @@ Options:
   --repo-url                    GitHub URL to generate release for    [required]
   --dry-run                     Prepare but do not take action
                                                       [boolean] [default: false]
-  --include-v-in-tags           include "v" in tag versions
+  --include-v-in-tags           include \\"v\\" in tag versions
                                                        [boolean] [default: true]
   --monorepo-tags               include library name in tags and release
                                 branches              [boolean] [default: false]
@@ -39,41 +42,42 @@ Options:
                                                                         [string]
   --release-type                what type of repo is a release being created
                                 for?
-   [choices: "dart", "dotnet-yoshi", "elixir", "expo", "go", "go-yoshi", "helm",
-                  "java", "java-backport", "java-bom", "java-lts", "java-yoshi",
-       "java-yoshi-mono-repo", "krm-blueprint", "maven", "node", "ocaml", "php",
-      "php-yoshi", "python", "ruby", "ruby-yoshi", "rust", "salesforce", "sfdx",
-                                                   "simple", "terraform-module"]
+   [choices: \\"dart\\", \\"dotnet-yoshi\\", \\"elixir\\", \\"expo\\", \\"go\\", \\"go-yoshi\\", \\"helm\\",
+                  \\"java\\", \\"java-backport\\", \\"java-bom\\", \\"java-lts\\", \\"java-yoshi\\",
+       \\"java-yoshi-mono-repo\\", \\"krm-blueprint\\", \\"maven\\", \\"node\\", \\"ocaml\\", \\"php\\",
+      \\"php-yoshi\\", \\"python\\", \\"ruby\\", \\"ruby-yoshi\\", \\"rust\\", \\"salesforce\\", \\"sfdx\\",
+                                                   \\"simple\\", \\"terraform-module\\"]
   --config-file                 where can the config file be found in the
-                                project? [default: "release-please-config.json"]
+                                project? [default: \\"release-please-config.json\\"]
   --manifest-file               where can the manifest file be found in the
                                 project?
-                                      [default: ".release-please-manifest.json"]
+                                      [default: \\".release-please-manifest.json\\"]
   --draft                       mark release as a draft. no tag is created but
                                 tag_name and target_commitish are associated
                                 with the release for future tag creation upon
-                                "un-drafting" the release.
+                                \\"un-drafting\\" the release.
                                                       [boolean] [default: false]
   --prerelease                  mark release that have prerelease versions as as
                                 a prerelease on Github[boolean] [default: false]
   --label                       comma-separated list of labels to remove to from
-                                release PR     [default: "autorelease: pending"]
+                                release PR     [default: \\"autorelease: pending\\"]
   --release-label               set a pull request label other than
-                                "autorelease: tagged"
-                                       [string] [default: "autorelease: tagged"]
+                                \\"autorelease: tagged\\"
+                                       [string] [default: \\"autorelease: tagged\\"]
   --snapshot-label              set a java snapshot pull request label other
-                                than "autorelease: snapshot"
-                                     [string] [default: "autorelease: snapshot"]
-`
+                                than \\"autorelease: snapshot\\"
+                                     [string] [default: \\"autorelease: snapshot\\"]"
+`;
 
-exports['CLI --help manifest-pr 1'] = `
-release-please manifest-pr
+exports[`CLI --help manifest-pr 1`] = `
+"release-please manifest-pr
 
 create a release-PR using a manifest file
 
 Options:
   --help                Show help                                      [boolean]
   --version             Show version number                            [boolean]
+  --update                                            [boolean] [default: false]
   --debug               print verbose errors (use only for local debugging).
                                                       [boolean] [default: false]
   --trace               print extra verbose errors (use only for local
@@ -82,9 +86,9 @@ Options:
                                                            [array] [default: []]
   --token               GitHub token with repo write permissions
   --api-url             URL to use when making API requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --graphql-url         URL to use when making GraphQL requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --default-branch      The branch to open release PRs against and tag releases
                         on    [deprecated: use --target-branch instead] [string]
   --target-branch       The branch to open release PRs against and tag releases
@@ -92,29 +96,30 @@ Options:
   --repo-url            GitHub URL to generate release for            [required]
   --dry-run             Prepare but do not take action[boolean] [default: false]
   --label               comma-separated list of labels to add to from release PR
-                                               [default: "autorelease: pending"]
+                                               [default: \\"autorelease: pending\\"]
   --skip-labeling       skip application of labels to pull requests
                                                       [boolean] [default: false]
   --fork                should the PR be created from a fork
                                                       [boolean] [default: false]
   --draft-pull-request  mark pull request as a draft  [boolean] [default: false]
   --signoff             Add Signed-off-by line at the end of the commit log
-                        message using the user and email provided. (format "Name
-                        <email@example.com>").                          [string]
+                        message using the user and email provided. (format \\"Name
+                        <email@example.com>\\").                          [string]
   --config-file         where can the config file be found in the project?
-                                         [default: "release-please-config.json"]
+                                         [default: \\"release-please-config.json\\"]
   --manifest-file       where can the manifest file be found in the project?
-                                      [default: ".release-please-manifest.json"]
-`
+                                      [default: \\".release-please-manifest.json\\"]"
+`;
 
-exports['CLI --help manifest-release 1'] = `
-release-please manifest-release
+exports[`CLI --help manifest-release 1`] = `
+"release-please manifest-release
 
 create releases/tags from last release-PR using a manifest file
 
 Options:
   --help            Show help                                          [boolean]
   --version         Show version number                                [boolean]
+  --update                                            [boolean] [default: false]
   --debug           print verbose errors (use only for local debugging).
                                                       [boolean] [default: false]
   --trace           print extra verbose errors (use only for local debugging).
@@ -123,9 +128,9 @@ Options:
                                                            [array] [default: []]
   --token           GitHub token with repo write permissions
   --api-url         URL to use when making API requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --graphql-url     URL to use when making GraphQL requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --default-branch  The branch to open release PRs against and tag releases on
                               [deprecated: use --target-branch instead] [string]
   --target-branch   The branch to open release PRs against and tag releases on
@@ -134,31 +139,32 @@ Options:
   --dry-run         Prepare but do not take action    [boolean] [default: false]
   --draft           mark release as a draft. no tag is created but tag_name and
                     target_commitish are associated with the release for future
-                    tag creation upon "un-drafting" the release.
+                    tag creation upon \\"un-drafting\\" the release.
                                                       [boolean] [default: false]
   --prerelease      mark release that have prerelease versions as as a
                     prerelease on Github              [boolean] [default: false]
   --label           comma-separated list of labels to remove to from release PR
-                                               [default: "autorelease: pending"]
-  --release-label   set a pull request label other than "autorelease: tagged"
-                                       [string] [default: "autorelease: tagged"]
+                                               [default: \\"autorelease: pending\\"]
+  --release-label   set a pull request label other than \\"autorelease: tagged\\"
+                                       [string] [default: \\"autorelease: tagged\\"]
   --snapshot-label  set a java snapshot pull request label other than
-                    "autorelease: snapshot"
-                                     [string] [default: "autorelease: snapshot"]
+                    \\"autorelease: snapshot\\"
+                                     [string] [default: \\"autorelease: snapshot\\"]
   --config-file     where can the config file be found in the project?
-                                         [default: "release-please-config.json"]
+                                         [default: \\"release-please-config.json\\"]
   --manifest-file   where can the manifest file be found in the project?
-                                      [default: ".release-please-manifest.json"]
-`
+                                      [default: \\".release-please-manifest.json\\"]"
+`;
 
-exports['CLI --help release-pr 1'] = `
-release-please release-pr
+exports[`CLI --help release-pr 1`] = `
+"release-please release-pr
 
 create or update a PR representing the next release
 
 Options:
   --help                            Show help                          [boolean]
   --version                         Show version number                [boolean]
+  --update                                            [boolean] [default: false]
   --debug                           print verbose errors (use only for local
                                     debugging).       [boolean] [default: false]
   --trace                           print extra verbose errors (use only for
@@ -168,9 +174,9 @@ Options:
                                                            [array] [default: []]
   --token                           GitHub token with repo write permissions
   --api-url                         URL to use when making API requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --graphql-url                     URL to use when making GraphQL requests
-                                    [string] [default: "https://api.github.com"]
+                                    [string] [default: \\"https://api.github.com\\"]
   --default-branch                  The branch to open release PRs against and
                                     tag releases on
                               [deprecated: use --target-branch instead] [string]
@@ -195,12 +201,12 @@ Options:
   --snapshot                        is it a snapshot (or pre-release) being
                                     generated?        [boolean] [default: false]
   --versioning-strategy             strategy used for bumping versions
-        [choices: "always-bump-major", "always-bump-minor", "always-bump-patch",
-                                 "default", "service-pack"] [default: "default"]
+        [choices: \\"always-bump-major\\", \\"always-bump-minor\\", \\"always-bump-patch\\",
+                                 \\"default\\", \\"service-pack\\"] [default: \\"default\\"]
   --changelog-path                  where can the CHANGELOG be found in the
-                                    project?  [string] [default: "CHANGELOG.md"]
+                                    project?  [string] [default: \\"CHANGELOG.md\\"]
   --changelog-type                  type of changelog to build
-                                                  [choices: "default", "github"]
+                                                  [choices: \\"default\\", \\"github\\"]
   --changelog-sections              comma-separated list of scopes to include in
                                     the changelog                       [string]
   --changelog-host                  host for hyperlinks in the changelog[string]
@@ -213,7 +219,7 @@ Options:
                                                                         [string]
   --label                           comma-separated list of labels to add to
                                     from release PR
-                                               [default: "autorelease: pending"]
+                                               [default: \\"autorelease: pending\\"]
   --skip-labeling                   skip application of labels to pull requests
                                                       [boolean] [default: false]
   --fork                            should the PR be created from a fork
@@ -222,9 +228,9 @@ Options:
                                                       [boolean] [default: false]
   --signoff                         Add Signed-off-by line at the end of the
                                     commit log message using the user and email
-                                    provided. (format "Name
-                                    <email@example.com>").              [string]
-  --include-v-in-tags               include "v" in tag versions
+                                    provided. (format \\"Name
+                                    <email@example.com>\\").              [string]
+  --include-v-in-tags               include \\"v\\" in tag versions
                                                        [boolean] [default: true]
   --monorepo-tags                   include library name in tags and release
                                     branches          [boolean] [default: false]
@@ -238,19 +244,21 @@ Options:
                                                                         [string]
   --release-type                    what type of repo is a release being created
                                     for?
-   [choices: "dart", "dotnet-yoshi", "elixir", "expo", "go", "go-yoshi", "helm",
-                  "java", "java-backport", "java-bom", "java-lts", "java-yoshi",
-       "java-yoshi-mono-repo", "krm-blueprint", "maven", "node", "ocaml", "php",
-      "php-yoshi", "python", "ruby", "ruby-yoshi", "rust", "salesforce", "sfdx",
-                                                   "simple", "terraform-module"]
+   [choices: \\"dart\\", \\"dotnet-yoshi\\", \\"elixir\\", \\"expo\\", \\"go\\", \\"go-yoshi\\", \\"helm\\",
+                  \\"java\\", \\"java-backport\\", \\"java-bom\\", \\"java-lts\\", \\"java-yoshi\\",
+       \\"java-yoshi-mono-repo\\", \\"krm-blueprint\\", \\"maven\\", \\"node\\", \\"ocaml\\", \\"php\\",
+      \\"php-yoshi\\", \\"python\\", \\"ruby\\", \\"ruby-yoshi\\", \\"rust\\", \\"salesforce\\", \\"sfdx\\",
+                                                   \\"simple\\", \\"terraform-module\\"]
   --config-file                     where can the config file be found in the
                                     project?
-                                         [default: "release-please-config.json"]
+                                         [default: \\"release-please-config.json\\"]
   --manifest-file                   where can the manifest file be found in the
                                     project?
-                                      [default: ".release-please-manifest.json"]
-`
+                                      [default: \\".release-please-manifest.json\\"]"
+`;
 
-exports['CLI handleError handles an error 1'] = [
-  "command foobar failed with status 404"
+exports[`CLI handleError handles an error 1`] = `
+Array [
+  "command foobar failed with status 404",
 ]
+`;

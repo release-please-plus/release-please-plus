@@ -22,7 +22,6 @@ import {
   DEFAULT_RELEASE_PLEASE_CONFIG,
   DEFAULT_RELEASE_PLEASE_MANIFEST,
 } from '../src/manifest';
-import snapshot = require('snap-shot-it');
 import {GitHub} from '../src/github';
 import {ParseCallback} from 'yargs';
 
@@ -80,7 +79,7 @@ describe('CLI', () => {
       } as unknown as Console;
       handleError.yargsArgs = {debug: true, _: ['foobar'], $0: 'mocha?'};
       handleError(err);
-      snapshot(logs);
+      expect(logs).toMatchSnapshot();
     });
 
     it('needs yargs', async () => {
@@ -1583,7 +1582,7 @@ describe('CLI', () => {
     ]) {
       it(cmd, async done => {
         const parseCallback: ParseCallback = (_err, _argv, output) => {
-          snapshot(output);
+          expect(output).toMatchSnapshot();
           done();
         };
         const foo = await parser.parseAsync(`${cmd} --help`, parseCallback);

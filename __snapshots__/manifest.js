@@ -1,5 +1,7 @@
-exports['Manifest buildPullRequests should allow creating multiple pull requests 1'] = `
-:robot: I have created a release *beep* *boop*
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Manifest buildPullRequests should allow creating multiple pull requests 1`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -11,11 +13,11 @@ exports['Manifest buildPullRequests should allow creating multiple pull requests
 * some bugfix ([aaaaaa](https://github.com/fake-owner/fake-repo/commit/aaaaaa))
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest buildPullRequests should allow creating multiple pull requests 2'] = `
-:robot: I have created a release *beep* *boop*
+exports[`Manifest buildPullRequests should allow creating multiple pull requests 2`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -27,11 +29,11 @@ exports['Manifest buildPullRequests should allow creating multiple pull requests
 * some bugfix ([bbbbbb](https://github.com/fake-owner/fake-repo/commit/bbbbbb))
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest buildPullRequests should allow customizing pull request title with root package 1'] = `
-:robot: I have created a release *beep* *boop*
+exports[`Manifest buildPullRequests should allow customizing pull request title with root package 1`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -69,11 +71,11 @@ exports['Manifest buildPullRequests should allow customizing pull request title 
 </details>
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest buildPullRequests should allow overriding commit message 1'] = `
-:robot: I have created a release *beep* *boop*
+exports[`Manifest buildPullRequests should allow overriding commit message 1`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -85,11 +87,11 @@ exports['Manifest buildPullRequests should allow overriding commit message 1'] =
 * real fix message ([def456](https://github.com/fake-owner/fake-repo/commit/def456))
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest buildPullRequests should handle mixing componentless configs 1'] = `
-:robot: I have created a release *beep* *boop*
+exports[`Manifest buildPullRequests should handle mixing componentless configs 1`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -114,11 +116,11 @@ exports['Manifest buildPullRequests should handle mixing componentless configs 1
 </details>
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest buildPullRequests should handle multiple package repository 1'] = `
-:robot: I have created a release *beep* *boop*
+exports[`Manifest buildPullRequests should handle multiple package repository 1`] = `
+":robot: I have created a release *beep* *boop*
 ---
 
 
@@ -143,17 +145,17 @@ exports['Manifest buildPullRequests should handle multiple package repository 1'
 </details>
 
 ---
-This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please).
-`
+This PR was generated with [Release Please](https://github.com/googleapis/release-please). See [documentation](https://github.com/googleapis/release-please#release-please)."
+`;
 
-exports['Manifest createPullRequests handles a single pull request: changes'] = `
-
+exports[`Manifest createPullRequests handles a single pull request 1`] = `
+"
 filename: README.md
-some raw content
-`
+some raw content"
+`;
 
-exports['Manifest createPullRequests handles a single pull request: options'] = `
-
+exports[`Manifest createPullRequests handles a single pull request 2`] = `
+"
 upstreamOwner: fake-owner
 upstreamRepo: fake-repo
 title: chore(main): release
@@ -172,17 +174,17 @@ fork: false
 message: chore(main): release
 logger: [object Object]
 draft: false
-labels: 
-`
+labels: "
+`;
 
-exports['Manifest createPullRequests handles fork = true: changes'] = `
-
+exports[`Manifest createPullRequests handles fork = true 1`] = `
+"
 filename: README.md
-some raw content
-`
+some raw content"
+`;
 
-exports['Manifest createPullRequests handles fork = true: options'] = `
-
+exports[`Manifest createPullRequests handles fork = true 2`] = `
+"
 upstreamOwner: fake-owner
 upstreamRepo: fake-repo
 title: chore(main): release
@@ -201,17 +203,17 @@ fork: true
 message: chore(main): release
 logger: [object Object]
 draft: false
-labels: 
-`
+labels: "
+`;
 
-exports['Manifest createPullRequests handles signoff users: changes'] = `
-
+exports[`Manifest createPullRequests handles signoff users 1`] = `
+"
 filename: README.md
-some raw content
-`
+some raw content"
+`;
 
-exports['Manifest createPullRequests handles signoff users: options'] = `
-
+exports[`Manifest createPullRequests handles signoff users 2`] = `
+"
 upstreamOwner: fake-owner
 upstreamRepo: fake-repo
 title: chore(main): release
@@ -232,5 +234,5 @@ message: chore(main): release
 Signed-off-by: Alice <alice@example.com>
 logger: [object Object]
 draft: false
-labels: 
-`
+labels: "
+`;

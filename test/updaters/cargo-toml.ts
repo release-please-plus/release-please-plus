@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {CargoToml} from '../../src/updaters/rust/cargo-toml';
 import {expect} from 'chai';
@@ -66,7 +66,7 @@ describe('CargoToml', () => {
         versionsMap: versions,
       });
       const newContent = cargoToml.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates (only) path dependencies', async () => {
@@ -90,7 +90,7 @@ describe('CargoToml', () => {
         versionsMap: versions,
       });
       const newContent = cargoToml.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

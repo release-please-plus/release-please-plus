@@ -22,7 +22,6 @@ import {
   assertHasUpdate,
   dateSafe,
 } from '../helpers';
-import snapshot = require('snap-shot-it');
 import {RawContent} from '../../src/updaters/raw-content';
 import {CompositeUpdater} from '../../src/updaters/composite';
 
@@ -96,7 +95,9 @@ describe('Merge plugin', () => {
       expect(updates).lengthOf(2);
       assertHasUpdate(updates, 'path1/foo', CompositeUpdater);
       assertHasUpdate(updates, 'path2/foo', RawContent);
-      snapshot(dateSafe(candidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(candidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
     });
 
     it('merges multiple pull requests as a draft', async () => {
@@ -139,7 +140,9 @@ describe('Merge plugin', () => {
       expect(updates).lengthOf(2);
       assertHasUpdate(updates, 'path1/foo', CompositeUpdater);
       assertHasUpdate(updates, 'path2/foo', RawContent);
-      snapshot(dateSafe(candidate!.pullRequest.body.toString()));
+      expect(
+        dateSafe(candidate!.pullRequest.body.toString())
+      ).toMatchSnapshot();
       expect(candidate.pullRequest.draft).to.be.true;
     });
 
@@ -183,7 +186,7 @@ describe('Merge plugin', () => {
         'label-b',
         'label-c',
       ]);
-      snapshot(dateSafe(candidate.pullRequest.body.toString()));
+      expect(dateSafe(candidate.pullRequest.body.toString())).toMatchSnapshot();
     });
   });
 });

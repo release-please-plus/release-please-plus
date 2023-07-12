@@ -44,7 +44,6 @@ import {PullRequestTitle} from '../src/util/pull-request-title';
 import {PullRequestBody} from '../src/util/pull-request-body';
 import {RawContent} from '../src/updaters/raw-content';
 import {TagName} from '../src/util/tag-name';
-import snapshot = require('snap-shot-it');
 import {
   DuplicateReleaseError,
   FileNotFoundError,
@@ -1811,7 +1810,7 @@ describe('Manifest', () => {
       const pullRequests = await manifest.buildPullRequests();
       expect(pullRequests).lengthOf(1);
       expect(pullRequests[0].labels).to.eql(['autorelease: pending']);
-      snapshot(dateSafe(pullRequests[0].body.toString()));
+      expect(dateSafe(pullRequests[0].body.toString())).toMatchSnapshot();
     });
 
     it('should allow creating multiple pull requests', async () => {
@@ -1899,8 +1898,8 @@ describe('Manifest', () => {
       );
       const pullRequests = await manifest.buildPullRequests();
       expect(pullRequests).lengthOf(2);
-      snapshot(dateSafe(pullRequests[0].body.toString()));
-      snapshot(dateSafe(pullRequests[1].body.toString()));
+      expect(dateSafe(pullRequests[0].body.toString())).toMatchSnapshot();
+      expect(dateSafe(pullRequests[1].body.toString())).toMatchSnapshot();
     });
 
     it('should allow forcing release-as on a single component', async () => {
@@ -2350,7 +2349,7 @@ describe('Manifest', () => {
       expect(pullRequest.title.toString()).to.eql(
         'chore(main): release root v1.2.2'
       );
-      snapshot(dateSafe(pullRequest.body.toString()));
+      expect(dateSafe(pullRequest.body.toString())).toMatchSnapshot();
     });
 
     it('should allow customizing pull request title without root package', async () => {
@@ -3089,7 +3088,7 @@ describe('Manifest', () => {
       const pullRequests = await manifest.buildPullRequests();
       expect(pullRequests).lengthOf(1);
       expect(pullRequests[0].labels).to.eql(['autorelease: pending']);
-      snapshot(dateSafe(pullRequests[0].body.toString()));
+      expect(dateSafe(pullRequests[0].body.toString())).toMatchSnapshot();
     });
 
     it('should allow customizing release-search-depth', async () => {

@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Version} from '../../src/version';
 import {expect, assert} from 'chai';
@@ -34,7 +34,7 @@ describe('GenericToml', () => {
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('updates deep entry in toml', async () => {
       const oldContent = readFileSync(
@@ -46,7 +46,7 @@ describe('GenericToml', () => {
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('ignores non-matching entry', async () => {
       const oldContent = readFileSync(
@@ -87,7 +87,7 @@ describe('GenericToml', () => {
       );
       const newContent = updater.updateContent(oldContent);
       expect(newContent).not.to.eql(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

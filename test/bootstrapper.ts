@@ -20,7 +20,6 @@ import {GitHub} from '../src/github';
 import {assertHasUpdate} from './helpers';
 import {ReleasePleaseManifest} from '../src/updaters/release-please-manifest';
 import {ReleasePleaseConfig} from '../src/updaters/release-please-config';
-import * as snapshot from 'snap-shot-it';
 
 const sandbox = sinon.createSandbox();
 
@@ -81,6 +80,6 @@ describe('Bootstrapper', () => {
     );
     expect(update.createIfMissing).to.be.true;
     const newContent = update.updater.updateContent(undefined);
-    snapshot(newContent);
+    expect(newContent).toMatchSnapshot();
   });
 });

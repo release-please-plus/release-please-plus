@@ -21,5 +21,9 @@ chai.use(
   jestSnapshotPlugin({
     moduleFileExtensions: ['js'],
     snapshotResolver: '<rootDir>/test/_myResolver.js',
+    snapshotFormat: {
+      escapeString: false,
+      printBasicPrototype: false,
+    },
   })
 );

@@ -19,7 +19,6 @@ import {BaseStrategy} from '../../src/strategies/base';
 import {Update} from '../../src/update';
 import {GitHub} from '../../src/github';
 import {PullRequestBody} from '../../src/util/pull-request-body';
-import snapshot = require('snap-shot-it');
 import {
   dateSafe,
   assertHasUpdate,
@@ -74,7 +73,7 @@ describe('Strategy', () => {
       const pullRequest = await strategy.buildReleasePullRequest(commits);
       expect(pullRequest).to.not.be.undefined;
       expect(pullRequest?.version?.toString()).to.eql('2.3.4');
-      snapshot(dateSafe(pullRequest!.body.toString()));
+      expect(dateSafe(pullRequest!.body.toString())).toMatchSnapshot();
     });
     it('allows overriding initial version in base constructor', async () => {
       const strategy = new TestStrategy({
@@ -87,7 +86,7 @@ describe('Strategy', () => {
       const pullRequest = await strategy.buildReleasePullRequest(commits);
       expect(pullRequest).to.not.be.undefined;
       expect(pullRequest?.version?.toString()).to.eql('0.1.0');
-      snapshot(dateSafe(pullRequest!.body.toString()));
+      expect(dateSafe(pullRequest!.body.toString())).toMatchSnapshot();
     });
     it('updates extra files', async () => {
       const strategy = new TestStrategy({
@@ -239,7 +238,7 @@ describe('Strategy', () => {
       expect(pullRequest?.body.toString()).to.have.string(
         'https://example.com'
       );
-      snapshot(dateSafe(pullRequest!.body.toString()));
+      expect(dateSafe(pullRequest!.body.toString())).toMatchSnapshot();
     });
     it('rejects relative extra files', async () => {
       const extraFiles = [

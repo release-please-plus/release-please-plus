@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {KRMBlueprintVersion} from '../../src/updaters/krm/krm-blueprint-version';
 import {Version} from '../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures/krm';
 
@@ -53,7 +54,7 @@ describe('KRM Blueprint', () => {
             versionsMap,
           });
           const newContent = version.updateContent(oldContent);
-          snapshot(newContent);
+          expect(newContent).toMatchSnapshot();
         });
       });
       describe('without previousVersion', () => {
@@ -67,7 +68,7 @@ describe('KRM Blueprint', () => {
             version: Version.parse(test.expectedVersion),
           });
           const newContent = version.updateContent(oldContent);
-          snapshot(newContent);
+          expect(newContent).toMatchSnapshot();
         });
       });
     });

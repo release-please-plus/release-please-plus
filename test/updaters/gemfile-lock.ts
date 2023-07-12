@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {GemfileLock} from '../../src/updaters/ruby/gemfile-lock';
@@ -75,7 +75,7 @@ describe('Gemfile.lock', () => {
         gemName: '',
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates version in Gemfile.lock', async () => {
@@ -88,7 +88,7 @@ describe('Gemfile.lock', () => {
         gemName: 'foo',
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
 
     it('updates prerelease in Gemfile.lock', async () => {
@@ -101,7 +101,7 @@ describe('Gemfile.lock', () => {
         gemName: 'foo',
       });
       const newContent = version.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

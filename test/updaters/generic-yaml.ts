@@ -14,7 +14,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Version} from '../../src/version';
 import {expect, assert} from 'chai';
@@ -31,7 +31,7 @@ describe('GenericYaml', () => {
       ).replace(/\r\n/g, '\n');
       const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('updates deep entry in json', async () => {
       const oldContent = readFileSync(
@@ -43,7 +43,7 @@ describe('GenericYaml', () => {
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('updates deep entry in yaml', async () => {
       const oldContent = readFileSync(
@@ -55,7 +55,7 @@ describe('GenericYaml', () => {
         Version.parse('v2.3.4')
       );
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
     it('ignores non-matching entry', async () => {
       const oldContent = readFileSync(
@@ -92,7 +92,7 @@ describe('GenericYaml', () => {
       ).replace(/\r\n/g, '\n');
       const updater = new GenericYaml('$.version', Version.parse('v2.3.4'));
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });

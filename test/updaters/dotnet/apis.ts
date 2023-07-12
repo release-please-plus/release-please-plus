@@ -14,10 +14,11 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import * as snapshot from 'snap-shot-it';
+
 import {describe, it} from 'mocha';
 import {Apis} from '../../../src/updaters/dotnet/apis';
 import {Version} from '../../../src/version';
+import {expect} from 'chai';
 
 const fixturesPath = './test/updaters/fixtures/dotnet';
 
@@ -33,7 +34,7 @@ describe('Apis', () => {
         Version.parse('2.12.0')
       );
       const newContent = updater.updateContent(oldContent);
-      snapshot(newContent);
+      expect(newContent).toMatchSnapshot();
     });
   });
 });
