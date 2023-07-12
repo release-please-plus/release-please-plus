@@ -49,7 +49,7 @@ describe('Elixir', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,

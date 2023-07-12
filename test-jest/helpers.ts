@@ -220,7 +220,10 @@ export function stubFilesFromFixtures(options: StubFiles) {
       .calledWith(file, targetBranch)
       .mockResolvedValue(buildGitHubFileRaw(content));
   }
-  stub.mockRejectedValue(Object.assign(Error('not found'), {status: 404}));
+
+  // when(stub).mockRejectedValue(
+  //   Object.assign(Error('not found'), {status: 404})
+  // );
 }
 
 // get list of files in a directory

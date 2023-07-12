@@ -63,10 +63,10 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .resolves(buildGitHubFileContent(fixturesPath, 'setup.py'));
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -81,10 +81,10 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .resolves(buildGitHubFileContent(fixturesPath, 'setup.py'));
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = {
         tag: new TagName(Version.parse('0.123.4'), 'google-cloud-automl'),
         sha: 'abc123',
@@ -104,10 +104,10 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .resolves(buildGitHubFileContent(fixturesPath, 'setup.py'));
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -145,12 +145,12 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .resolves(
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockResolvedValue(
           buildGitHubFileContent('./test/updaters/fixtures', 'pyproject.toml')
         );
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -166,12 +166,12 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .resolves(buildGitHubFileContent(fixturesPath, 'setup.py'));
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .resolves(['src/version.py']);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
+      when(jest
+        .spyOn(github, 'findFilesByFilenameAndRef')
+        .mockResolvedValue(['src/version.py']);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -198,17 +198,19 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
-      const getFileContentsStub = sandbox.stub(
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('changelog.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'changelog.json'));
+        .calledWith('changelog.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'changelog.json')
+        );
       getFileContentsStub
-        .withArgs('setup.py', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'setup.py'));
+        .calledWith('setup.py', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,

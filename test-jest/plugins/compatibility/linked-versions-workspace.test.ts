@@ -30,6 +30,7 @@ import {parseCargoManifest} from '../../../src/updaters/rust/common';
 import {Changelog} from '../../../src/updaters/changelog';
 import {ReleasePleaseManifest} from '../../../src/updaters/release-please-manifest';
 import {CompositeUpdater} from '../../../src/updaters/composite';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/plugins/cargo-workspace';
 
@@ -125,12 +126,11 @@ describe('Plugin compatibility', () => {
           ],
         ],
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB']);
       const manifest = new Manifest(
         github,
         'main',

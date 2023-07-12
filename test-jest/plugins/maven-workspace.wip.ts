@@ -29,6 +29,7 @@ import {Version} from '../../src/version';
 import {PomXml} from '../../src/updaters/java/pom-xml';
 import {RawContent} from '../../src/updaters/raw-content';
 import {ReleasePleaseManifest} from '../../src/updaters/release-please-manifest';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/plugins/maven-workspace';
 
@@ -84,10 +85,9 @@ describe('MavenWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',
@@ -126,10 +126,9 @@ describe('MavenWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',
@@ -177,10 +176,9 @@ describe('MavenWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',
@@ -224,10 +222,9 @@ describe('MavenWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',
@@ -263,10 +260,9 @@ describe('MavenWorkspace plugin', () => {
           considerAllArtifacts: false,
         }
       );
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',
@@ -367,10 +363,9 @@ describe('MavenWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'bom/pom.xml',
           'multi1/pom.xml',
           'multi1/bom/pom.xml',
@@ -412,10 +407,9 @@ describe('MavenWorkspace plugin', () => {
           releaseType: 'maven',
         },
       });
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue([
           'maven1/pom.xml',
           'maven2/pom.xml',
           'maven3/pom.xml',

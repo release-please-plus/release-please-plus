@@ -60,7 +60,7 @@ describe('OCaml', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByExtension').resolves([]);
+      jest.spyOn(github, 'findFilesByExtension').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -75,7 +75,7 @@ describe('OCaml', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByExtension').resolves([]);
+      jest.spyOn(github, 'findFilesByExtension').mockResolvedValue([]);
       const latestRelease = {
         tag: new TagName(Version.parse('0.123.4'), 'google-cloud-automl'),
         sha: 'abc123',
@@ -95,7 +95,7 @@ describe('OCaml', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByExtension').resolves([]);
+      jest.spyOn(github, 'findFilesByExtension').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -113,12 +113,14 @@ describe('OCaml', () => {
         github,
         component: 'google-cloud-automl',
       });
-      const findFilesStub = sandbox.stub(github, 'findFilesByExtension');
-      findFilesStub.withArgs('json', '.').resolves(['esy.json', 'other.json']);
-      findFilesStub.withArgs('opam', '.').resolves(['sample.opam']);
+      const findFilesStub = jest.spyOn(github, 'findFilesByExtension');
       findFilesStub
-        .withArgs('opam.locked', '.')
-        .resolves(['sample.opam.locked']);
+        .calledWith('json', '.')
+        .mockResolvedValue(['esy.json', 'other.json']);
+      findFilesStub.calledWith('opam', '.').mockResolvedValue(['sample.opam']);
+      findFilesStub
+        .calledWith('opam.locked', '.')
+        .mockResolvedValue(['sample.opam.locked']);
       stubFilesFromFixtures({
         github,
         targetBranch: 'main',

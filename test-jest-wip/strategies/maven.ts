@@ -26,6 +26,7 @@ import {Maven} from '../../src/strategies/maven';
 import {PomXml} from '../../src/updaters/java/pom-xml';
 import {TagName} from '../../src/util/tag-name';
 import {Version} from '../../src/version';
+import {when} from 'jest-when';
 
 const COMMITS = [
   ...buildMockConventionalCommit('fix(deps): update dependency'),
@@ -52,10 +53,9 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves(['pom.xml', 'submodule/pom.xml']);
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -84,10 +84,9 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('pom.xml', 'main')
-        .resolves(['pom.xml', 'submodule/pom.xml']);
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('pom.xml', 'main')
+        .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 
       const latestRelease = {
         tag: new TagName(Version.parse('2.3.3')),

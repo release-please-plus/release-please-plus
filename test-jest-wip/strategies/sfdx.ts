@@ -100,13 +100,15 @@ describe('Sfdx', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('sfdx-project.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'sfdx-project.json'));
+        .calledWith('sfdx-project.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'sfdx-project.json')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease
@@ -130,13 +132,15 @@ describe('Sfdx', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('sfdx-project.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'sfdx-project.json'));
+        .calledWith('sfdx-project.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'sfdx-project.json')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease
@@ -144,8 +148,8 @@ describe('Sfdx', () => {
       expect(pullRequest!.version?.toString()).toEqual(expectedVersion);
     });
     it('handles missing sfdx-project.json', async () => {
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
         .rejects(new FileNotFoundError('stub/path'));
       const strategy = new Sfdx({
         targetBranch: 'main',
@@ -169,7 +173,7 @@ describe('Sfdx', () => {
         component: 'google-cloud-automl',
         packageName: 'google-cloud-automl-pkg',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,

@@ -52,7 +52,7 @@ describe('TerraformModule', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -67,7 +67,7 @@ describe('TerraformModule', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = {
         tag: new TagName(Version.parse('0.123.4'), 'google-cloud-automl'),
         sha: 'abc123',
@@ -87,7 +87,7 @@ describe('TerraformModule', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -103,19 +103,22 @@ describe('TerraformModule', () => {
         github,
         component: 'google-cloud-automl',
       });
-      const findFilesStub = sandbox.stub(github, 'findFilesByFilenameAndRef');
+      const findFilesStub = jest.spyOn(github, 'findFilesByFilenameAndRef');
       findFilesStub
-        .withArgs('readme.md', 'main', '.')
-        .resolves(['path1/readme.md', 'path2/readme.md']);
+        .calledWith('readme.md', 'main', '.')
+        .mockResolvedValue(['path1/readme.md', 'path2/readme.md']);
       findFilesStub
-        .withArgs('README.md', 'main', '.')
-        .resolves(['README.md', 'path3/README.md']);
+        .calledWith('README.md', 'main', '.')
+        .mockResolvedValue(['README.md', 'path3/README.md']);
       findFilesStub
-        .withArgs('versions.tf', 'main', '.')
-        .resolves(['path1/versions.tf', 'path2/versions.tf']);
+        .calledWith('versions.tf', 'main', '.')
+        .mockResolvedValue(['path1/versions.tf', 'path2/versions.tf']);
       findFilesStub
-        .withArgs('versions.tf.tmpl', 'main', '.')
-        .resolves(['path1/versions.tf.tmpl', 'path2/versions.tf.tmpl']);
+        .calledWith('versions.tf.tmpl', 'main', '.')
+        .mockResolvedValue([
+          'path1/versions.tf.tmpl',
+          'path2/versions.tf.tmpl',
+        ]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,

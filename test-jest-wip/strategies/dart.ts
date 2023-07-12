@@ -25,6 +25,7 @@ import {Version} from '../../src/version';
 import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
 import {PubspecYaml} from '../../src/updaters/dart/pubspec-yaml';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 
@@ -56,7 +57,7 @@ describe('Dart', () => {
         component: 'google-cloud-automl',
         packageName: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,
@@ -99,13 +100,12 @@ describe('Dart', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
-        .withArgs('pubspec.yaml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'pubspec.yaml'));
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
+        .calledWith('pubspec.yaml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'pubspec.yaml')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease

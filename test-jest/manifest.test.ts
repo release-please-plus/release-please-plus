@@ -4,7 +4,7 @@ import createMockInstance from 'jest-create-mock-instance';
 import {Manifest} from '../src/manifest';
 import {GitHub, ReleaseOptions} from '../src/github';
 import * as githubModule from '../src/github';
-import {when} from 'jest-when';
+import {resetAllWhenMocks, when} from 'jest-when';
 import {
   buildGitHubFileContent,
   buildGitHubFileRaw,
@@ -188,6 +188,7 @@ describe('Manifest', () => {
   });
   afterEach(() => {
     jest.restoreAllMocks();
+    resetAllWhenMocks();
   });
 
   // sandbox.stub -> jest.spyOn

@@ -26,6 +26,7 @@ import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
 import {PullRequestBody} from '../../src/util/pull-request-body';
 import {Apis} from '../../src/updaters/dotnet/apis';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/strategies/dotnet-yoshi';
 
@@ -53,10 +54,9 @@ describe('DotnetYoshi', () => {
   });
   describe('buildReleasePullRequest', () => {
     beforeEach(() => {
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('apis/apis.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'apis.json'));
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
+        .calledWith('apis/apis.json', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'apis.json'));
     });
     it('returns release PR changes with defaultInitialVersion', async () => {
       const expectedVersion = '1.0.0';
@@ -107,10 +107,9 @@ describe('DotnetYoshi', () => {
         path: 'apis/Google.Cloud.SecurityCenter.V1',
         component: 'Google.Cloud.SecurityCenter.V1',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('apis/apis.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'apis.json'));
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
+        .calledWith('apis/apis.json', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'apis.json'));
       const latestRelease = undefined;
       const pullRequest = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -133,10 +132,9 @@ describe('DotnetYoshi', () => {
         path: 'apis/Google.Cloud.Spanner.Admin.Database.V1',
         component: 'Google.Cloud.Spanner.Admin.Database.V1',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('apis/apis.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'apis.json'));
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
+        .calledWith('apis/apis.json', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'apis.json'));
       const latestRelease = undefined;
       const pullRequest = await strategy.buildReleasePullRequest(
         COMMITS,

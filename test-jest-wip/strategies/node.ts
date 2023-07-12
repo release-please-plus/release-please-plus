@@ -108,13 +108,15 @@ describe('Node', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('package.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'package.json'));
+        .calledWith('package.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'package.json')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease
@@ -138,13 +140,15 @@ describe('Node', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('package.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'package.json'));
+        .calledWith('package.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'package.json')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease
@@ -152,8 +156,8 @@ describe('Node', () => {
       expect(pullRequest!.version?.toString()).toEqual(expectedVersion);
     });
     it('handles missing package.json', async () => {
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
         .rejects(new FileNotFoundError('stub/path'));
       const strategy = new Node({
         targetBranch: 'main',
@@ -185,17 +189,21 @@ describe('Node', () => {
         github,
         component: 'google-cloud-node',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
-      const getFileContentsStub = sandbox.stub(
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('changelog.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'changelog.json'));
+        .calledWith('changelog.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'changelog.json')
+        );
       getFileContentsStub
-        .withArgs('package.json', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'package.json'));
+        .calledWith('package.json', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'package.json')
+        );
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -223,7 +231,7 @@ describe('Node', () => {
         component: 'google-cloud-automl',
         packageName: 'google-cloud-automl-pkg',
       });
-      sandbox.stub(github, 'findFilesByFilenameAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,

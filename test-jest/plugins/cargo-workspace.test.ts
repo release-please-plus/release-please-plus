@@ -31,6 +31,7 @@ import {RawContent} from '../../src/updaters/raw-content';
 import {CargoToml} from '../../src/updaters/rust/cargo-toml';
 import {parseCargoManifest} from '../../src/updaters/rust/common';
 import {ConfigurationError} from '../../src/errors';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/plugins/cargo-workspace';
 
@@ -115,10 +116,9 @@ describe('CargoWorkspace plugin', () => {
           releaseType: 'rust',
         },
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA']);
       const newCandidates = await plugin.run(candidates);
       expect(newCandidates).toHaveLength(2);
       const rustCandidate = newCandidates.find(
@@ -166,12 +166,11 @@ describe('CargoWorkspace plugin', () => {
           ],
         ],
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustD', 'main')
-        .resolves(['packages/rustD']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustD', 'main')
+        .mockResolvedValue(['packages/rustD']);
       plugin = new CargoWorkspace(github, 'main', {
         'packages/rustA': {
           releaseType: 'rust',
@@ -222,10 +221,9 @@ describe('CargoWorkspace plugin', () => {
         targetBranch: 'main',
         inlineFiles: [['Cargo.toml', '[workspace]\nmembers = ["packages/*"]']],
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/*', 'main')
-        .resolves(['packages/rustA', 'packages/rustD']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/*', 'main')
+        .mockResolvedValue(['packages/rustA', 'packages/rustD']);
       plugin = new CargoWorkspace(github, 'main', {
         'packages/rustA': {
           releaseType: 'rust',
@@ -282,18 +280,17 @@ describe('CargoWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB'])
-        .withArgs('packages/rustC', 'main')
-        .resolves(['packages/rustC'])
-        .withArgs('packages/rustD', 'main')
-        .resolves(['packages/rustD'])
-        .withArgs('packages/rustE', 'main')
-        .resolves(['packages/rustE']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB'])
+        .calledWith('packages/rustC', 'main')
+        .mockResolvedValue(['packages/rustC'])
+        .calledWith('packages/rustD', 'main')
+        .mockResolvedValue(['packages/rustD'])
+        .calledWith('packages/rustE', 'main')
+        .mockResolvedValue(['packages/rustE']);
       const newCandidates = await plugin.run(candidates);
       expect(newCandidates).toHaveLength(1);
       const rustCandidate = newCandidates.find(
@@ -346,18 +343,17 @@ describe('CargoWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB'])
-        .withArgs('packages/rustC', 'main')
-        .resolves(['packages/rustC'])
-        .withArgs('packages/rustD', 'main')
-        .resolves(['packages/rustD'])
-        .withArgs('packages/rustE', 'main')
-        .resolves(['packages/rustE']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB'])
+        .calledWith('packages/rustC', 'main')
+        .mockResolvedValue(['packages/rustC'])
+        .calledWith('packages/rustD', 'main')
+        .mockResolvedValue(['packages/rustD'])
+        .calledWith('packages/rustE', 'main')
+        .mockResolvedValue(['packages/rustE']);
       plugin = new CargoWorkspace(
         github,
         'main',
@@ -417,18 +413,17 @@ describe('CargoWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB'])
-        .withArgs('packages/rustC', 'main')
-        .resolves(['packages/rustC'])
-        .withArgs('packages/rustD', 'main')
-        .resolves(['packages/rustD'])
-        .withArgs('packages/rustE', 'main')
-        .resolves(['packages/rustE']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB'])
+        .calledWith('packages/rustC', 'main')
+        .mockResolvedValue(['packages/rustC'])
+        .calledWith('packages/rustD', 'main')
+        .mockResolvedValue(['packages/rustD'])
+        .calledWith('packages/rustE', 'main')
+        .mockResolvedValue(['packages/rustE']);
       const newCandidates = await plugin.run(candidates);
       expect(newCandidates).toHaveLength(1);
       const rustCandidate = newCandidates.find(
@@ -470,18 +465,17 @@ describe('CargoWorkspace plugin', () => {
         flatten: false,
         targetBranch: 'main',
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB'])
-        .withArgs('packages/rustC', 'main')
-        .resolves(['packages/rustC'])
-        .withArgs('packages/rustD', 'main')
-        .resolves(['packages/rustD'])
-        .withArgs('packages/rustE', 'main')
-        .resolves(['packages/rustE']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB'])
+        .calledWith('packages/rustC', 'main')
+        .mockResolvedValue(['packages/rustC'])
+        .calledWith('packages/rustD', 'main')
+        .mockResolvedValue(['packages/rustD'])
+        .calledWith('packages/rustE', 'main')
+        .mockResolvedValue(['packages/rustE']);
       const newCandidates = await plugin.run(candidates);
       expect(newCandidates).toHaveLength(1);
       const rustCandidate = newCandidates.find(
@@ -526,12 +520,11 @@ describe('CargoWorkspace plugin', () => {
           ],
         ],
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB']);
       plugin = new CargoWorkspace(github, 'main', {
         'packages/rustA': {
           releaseType: 'rust',
@@ -540,16 +533,14 @@ describe('CargoWorkspace plugin', () => {
           releaseType: 'rust',
         },
       });
-      await assert.rejects(
-        async () => {
-          await plugin.run(candidates);
-        },
-        err => {
-          return (
-            err instanceof ConfigurationError && err.message.includes('missing')
-          );
-        }
-      );
+      expect.assertions(2);
+      try {
+        await plugin.run(candidates);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(ConfigurationError);
+        expect(e?.message).toInclude('missing');
+      }
     });
     it('handles packages with invalid version', async () => {
       const candidates: CandidateReleasePullRequest[] = [
@@ -580,12 +571,11 @@ describe('CargoWorkspace plugin', () => {
           ],
         ],
       });
-      sandbox
-        .stub(github, 'findFilesByGlobAndRef')
-        .withArgs('packages/rustA', 'main')
-        .resolves(['packages/rustA'])
-        .withArgs('packages/rustB', 'main')
-        .resolves(['packages/rustB']);
+      when(jest.spyOn(github, 'findFilesByGlobAndRef'))
+        .calledWith('packages/rustA', 'main')
+        .mockResolvedValue(['packages/rustA'])
+        .calledWith('packages/rustB', 'main')
+        .mockResolvedValue(['packages/rustB']);
       plugin = new CargoWorkspace(github, 'main', {
         'packages/rustA': {
           releaseType: 'rust',
@@ -594,16 +584,14 @@ describe('CargoWorkspace plugin', () => {
           releaseType: 'rust',
         },
       });
-      await assert.rejects(
-        async () => {
-          await plugin.run(candidates);
-        },
-        err => {
-          return (
-            err instanceof ConfigurationError && err.message.includes('invalid')
-          );
-        }
-      );
+      expect.assertions(2);
+      try {
+        await plugin.run(candidates);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        expect(e).toBeInstanceOf(ConfigurationError);
+        expect(e.message).toInclude('invalid');
+      }
     });
   });
 });

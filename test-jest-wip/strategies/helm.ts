@@ -25,6 +25,7 @@ import {Version} from '../../src/version';
 import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
 import {ChartYaml} from '../../src/updaters/helm/chart-yaml';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 
@@ -93,13 +94,10 @@ describe('Helm', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
-        .withArgs('Chart.yaml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Chart.yaml'));
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
+        .calledWith('Chart.yaml', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'Chart.yaml'));
       const pullRequest = await strategy.buildReleasePullRequest(
         commits,
         latestRelease

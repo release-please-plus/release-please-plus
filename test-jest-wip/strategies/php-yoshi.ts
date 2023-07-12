@@ -47,25 +47,25 @@ describe('PHPYoshi', () => {
       repo: 'php-yoshi-test-repo',
       defaultBranch: 'main',
     });
-    getFileStub = sandbox.stub(github, 'getFileContentsOnBranch');
+    getFileStub = jest.spyOn(github, 'getFileContentsOnBranch');
     getFileStub
-      .withArgs('Client1/VERSION', 'main')
-      .resolves(buildGitHubFileRaw('1.2.3'));
+      .calledWith('Client1/VERSION', 'main')
+      .mockResolvedValue(buildGitHubFileRaw('1.2.3'));
     getFileStub
-      .withArgs('Client2/VERSION', 'main')
-      .resolves(buildGitHubFileRaw('2.0.0'));
+      .calledWith('Client2/VERSION', 'main')
+      .mockResolvedValue(buildGitHubFileRaw('2.0.0'));
     getFileStub
-      .withArgs('Client3/VERSION', 'main')
-      .resolves(buildGitHubFileRaw('0.1.2'));
+      .calledWith('Client3/VERSION', 'main')
+      .mockResolvedValue(buildGitHubFileRaw('0.1.2'));
     getFileStub
-      .withArgs('Client1/composer.json', 'main')
-      .resolves(buildGitHubFileRaw('{"name": "google/client1"}'));
+      .calledWith('Client1/composer.json', 'main')
+      .mockResolvedValue(buildGitHubFileRaw('{"name": "google/client1"}'));
     getFileStub
-      .withArgs('Client2/composer.json', 'main')
-      .resolves(buildGitHubFileRaw('{"name": "google/client2"}'));
+      .calledWith('Client2/composer.json', 'main')
+      .mockResolvedValue(buildGitHubFileRaw('{"name": "google/client2"}'));
     getFileStub
-      .withArgs('Client3/composer.json', 'main')
-      .resolves(
+      .calledWith('Client3/composer.json', 'main')
+      .mockResolvedValue(
         buildGitHubFileRaw(
           '{"name": "google/client3", "extra": {"component": {"entry": "src/Entry.php"}}}'
         )
@@ -181,7 +181,7 @@ describe('PHPYoshi', () => {
         ...buildMockConventionalCommit('misc: update common templates'),
       ];
       getFileStub
-        .withArgs('.git/VERSION', 'main')
+        .calledWith('.git/VERSION', 'main')
         .rejects(new FileNotFoundError('.git/VERSION'));
       const release = await strategy.buildReleasePullRequest(
         commits,

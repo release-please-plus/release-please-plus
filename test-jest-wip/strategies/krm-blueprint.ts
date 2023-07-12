@@ -26,6 +26,7 @@ import {Version} from '../../src/version';
 import {TagName} from '../../src/util/tag-name';
 import {KRMBlueprintVersion} from '../../src/updaters/krm/krm-blueprint-version';
 import {Changelog} from '../../src/updaters/changelog';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 
@@ -56,7 +57,7 @@ describe('KRMBlueprint', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByExtensionAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByExtensionAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,
@@ -71,7 +72,7 @@ describe('KRMBlueprint', () => {
         github,
         component: 'some-krm-blueprint-package',
       });
-      sandbox.stub(github, 'findFilesByExtensionAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByExtensionAndRef').mockResolvedValue([]);
       const latestRelease = {
         tag: new TagName(
           Version.parse('0.123.4'),
@@ -94,7 +95,7 @@ describe('KRMBlueprint', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox.stub(github, 'findFilesByExtensionAndRef').resolves([]);
+      jest.spyOn(github, 'findFilesByExtensionAndRef').mockResolvedValue([]);
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         commits,
@@ -110,13 +111,11 @@ describe('KRMBlueprint', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'findFilesByExtensionAndRef')
-        .withArgs('yaml', 'main', '.')
-        .resolves(['project.yaml', 'no-attrib-bucket.yaml']);
+      when(jest.spyOn(github, 'findFilesByExtensionAndRef'))
+        .calledWith('yaml', 'main', '.')
+        .mockResolvedValue(['project.yaml', 'no-attrib-bucket.yaml']);
       stubFilesFromFixtures({
         github,
-        sandbox,
         fixturePath: `${fixturesPath}/nested-pkg`,
         files: ['project.yaml', 'no-attrib-bucket.yaml'],
         targetBranch: 'main',

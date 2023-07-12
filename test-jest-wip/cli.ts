@@ -53,7 +53,9 @@ describe('CLI', () => {
       defaultBranch: 'main',
     });
     fakeManifest = new Manifest(fakeGitHub, 'main', {}, {});
-    gitHubCreateStub = sandbox.stub(GitHub, 'create').resolves(fakeGitHub);
+    gitHubCreateStub = sandbox
+      .stub(GitHub, 'create')
+      .mockResolvedValue(fakeGitHub);
   });
   afterEach(() => {
     jest.restoreAllMocks();
@@ -87,12 +89,12 @@ describe('CLI', () => {
     let fromManifestStub: sinon.SinonStub;
     let createPullRequestsStub: sinon.SinonStub;
     beforeEach(() => {
-      fromManifestStub = sandbox
-        .stub(Manifest, 'fromManifest')
-        .resolves(fakeManifest);
-      createPullRequestsStub = sandbox
-        .stub(fakeManifest, 'createPullRequests')
-        .resolves([
+      fromManifestStub = when(jest
+        .spyOn(Manifest, 'fromManifest')
+        .mockResolvedValue(fakeManifest);
+      createPullRequestsStub = when(jest
+        .spyOn(fakeManifest, 'createPullRequests')
+        .mockResolvedValue([
           {
             title: 'fake title',
             body: 'fake body',
@@ -176,9 +178,9 @@ describe('CLI', () => {
     }
 
     it('handles --dry-run', async () => {
-      const buildPullRequestsStub = sandbox
-        .stub(fakeManifest, 'buildPullRequests')
-        .resolves([]);
+      const buildPullRequestsStub = when(jest
+        .spyOn(fakeManifest, 'buildPullRequests')
+        .mockResolvedValue([]);
 
       await parser.parseAsync(
         'manifest-pr --repo-url=googleapis/release-please-cli --dry-run'
@@ -344,12 +346,12 @@ describe('CLI', () => {
     let fromManifestStub: sinon.SinonStub;
     let createReleasesStub: sinon.SinonStub;
     beforeEach(() => {
-      fromManifestStub = sandbox
-        .stub(Manifest, 'fromManifest')
-        .resolves(fakeManifest);
-      createReleasesStub = sandbox
-        .stub(fakeManifest, 'createReleases')
-        .resolves([
+      fromManifestStub = when(jest
+        .spyOn(Manifest, 'fromManifest')
+        .mockResolvedValue(fakeManifest);
+      createReleasesStub = when(jest
+        .spyOn(fakeManifest, 'createReleases')
+        .mockResolvedValue([
           {
             id: 123456,
             tagName: 'v1.2.3',
@@ -436,9 +438,9 @@ describe('CLI', () => {
     }
 
     it('handles --dry-run', async () => {
-      const buildReleasesStub = sandbox
-        .stub(fakeManifest, 'buildReleases')
-        .resolves([]);
+      const buildReleasesStub = when(jest
+        .spyOn(fakeManifest, 'buildReleases')
+        .mockResolvedValue([]);
 
       await parser.parseAsync(
         'manifest-release --repo-url=googleapis/release-please-cli --dry-run'
@@ -538,10 +540,10 @@ describe('CLI', () => {
       beforeEach(() => {
         fromManifestStub = sandbox
           .stub(Manifest, 'fromManifest')
-          .resolves(fakeManifest);
+          .mockResolvedValue(fakeManifest);
         createPullRequestsStub = sandbox
           .stub(fakeManifest, 'createPullRequests')
-          .resolves([
+          .mockResolvedValue([
             {
               title: 'fake title',
               body: 'fake body',
@@ -633,7 +635,7 @@ describe('CLI', () => {
       it('handles --dry-run', async () => {
         const buildPullRequestsStub = sandbox
           .stub(fakeManifest, 'buildPullRequests')
-          .resolves([]);
+          .mockResolvedValue([]);
 
         await parser.parseAsync(
           'release-pr --repo-url=googleapis/release-please-cli --dry-run'
@@ -665,10 +667,10 @@ describe('CLI', () => {
       beforeEach(() => {
         fromConfigStub = sandbox
           .stub(Manifest, 'fromConfig')
-          .resolves(fakeManifest);
+          .mockResolvedValue(fakeManifest);
         createPullRequestsStub = sandbox
           .stub(fakeManifest, 'createPullRequests')
-          .resolves([
+          .mockResolvedValue([
             {
               title: 'fake title',
               body: 'fake body',
@@ -732,7 +734,7 @@ describe('CLI', () => {
       it('handles --dry-run', async () => {
         const buildPullRequestsStub = sandbox
           .stub(fakeManifest, 'buildPullRequests')
-          .resolves([]);
+          .mockResolvedValue([]);
 
         await parser.parseAsync(
           'release-pr --repo-url=googleapis/release-please-cli --release-type=java-yoshi --dry-run'
@@ -1130,10 +1132,10 @@ describe('CLI', () => {
       beforeEach(() => {
         fromManifestStub = sandbox
           .stub(Manifest, 'fromManifest')
-          .resolves(fakeManifest);
+          .mockResolvedValue(fakeManifest);
         createReleasesStub = sandbox
           .stub(fakeManifest, 'createReleases')
-          .resolves([
+          .mockResolvedValue([
             {
               id: 123456,
               tagName: 'v1.2.3',
@@ -1222,7 +1224,7 @@ describe('CLI', () => {
       it('handles --dry-run', async () => {
         const buildReleasesStub = sandbox
           .stub(fakeManifest, 'buildReleases')
-          .resolves([]);
+          .mockResolvedValue([]);
 
         await parser.parseAsync(
           'github-release --repo-url=googleapis/release-please-cli --dry-run'
@@ -1304,10 +1306,10 @@ describe('CLI', () => {
       beforeEach(() => {
         fromConfigStub = sandbox
           .stub(Manifest, 'fromConfig')
-          .resolves(fakeManifest);
+          .mockResolvedValue(fakeManifest);
         createReleasesStub = sandbox
           .stub(fakeManifest, 'createReleases')
-          .resolves([
+          .mockResolvedValue([
             {
               id: 123456,
               tagName: 'v1.2.3',
@@ -1349,7 +1351,7 @@ describe('CLI', () => {
       it('handles --dry-run', async () => {
         const buildReleasesStub = sandbox
           .stub(fakeManifest, 'buildReleases')
-          .resolves([]);
+          .mockResolvedValue([]);
         await parser.parseAsync(
           'github-release --repo-url=googleapis/release-please-cli --release-type=java-yoshi --dry-run'
         );
@@ -1539,9 +1541,9 @@ describe('CLI', () => {
   });
   describe('bootstrap', () => {
     it('defaults path to .', async () => {
-      const createPullStub = sandbox
-        .stub(fakeGitHub, 'createPullRequest')
-        .resolves({
+      const createPullStub = when(jest
+        .spyOn(fakeGitHub, 'createPullRequest')
+        .mockResolvedValue({
           headBranchName: 'head-branch',
           baseBranchName: 'base-branch',
           number: 1234,

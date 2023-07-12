@@ -512,38 +512,35 @@ describe('GitHub', () => {
       req.done();
     });
 
-    it(
-      'backfills commit files for pull requests with lots of files',
-      async () => {
-        const graphql = JSON.parse(
-          readFileSync(
-            resolve(fixturesPath, 'commits-since-many-files.json'),
-            'utf8'
-          )
-        );
-        req
-          .post('/graphql')
-          .reply(200, {
-            data: graphql,
-          })
-          .get(
-            '/repos/fake/fake/commits/e6daec403626c9987c7af0d97b34f324cd84320a'
-          )
-          .reply(200, {files: [{filename: 'abc'}]});
-        const targetBranch = 'main';
-        const commitsSinceSha = await github.commitsSince(
-          targetBranch,
-          commit => {
-            // this commit is the 2nd most recent
-            return commit.sha === 'b29149f890e6f76ee31ed128585744d4c598924c';
-          },
-          {backfillFiles: true}
-        );
-        expect(commitsSinceSha.length).toEqual(1);
-        expect(commitsSinceSha).toMatchSnapshot();
-        req.done();
-      }
-    );
+    it('backfills commit files for pull requests with lots of files', async () => {
+      const graphql = JSON.parse(
+        readFileSync(
+          resolve(fixturesPath, 'commits-since-many-files.json'),
+          'utf8'
+        )
+      );
+      req
+        .post('/graphql')
+        .reply(200, {
+          data: graphql,
+        })
+        .get(
+          '/repos/fake/fake/commits/e6daec403626c9987c7af0d97b34f324cd84320a'
+        )
+        .reply(200, {files: [{filename: 'abc'}]});
+      const targetBranch = 'main';
+      const commitsSinceSha = await github.commitsSince(
+        targetBranch,
+        commit => {
+          // this commit is the 2nd most recent
+          return commit.sha === 'b29149f890e6f76ee31ed128585744d4c598924c';
+        },
+        {backfillFiles: true}
+      );
+      expect(commitsSinceSha.length).toEqual(1);
+      expect(commitsSinceSha).toMatchSnapshot();
+      req.done();
+    });
   });
 
   describe('mergeCommitIterator', () => {
@@ -932,19 +929,19 @@ describe('GitHub', () => {
 
   describe('createReleasePullRequest', () => {
     it('should update file', async () => {
-      const createPullRequestStub = sandbox
-        .stub(codeSuggester, 'createPullRequest')
-        .resolves(1);
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('existing-file', 'main')
-        .resolves({
+      const createPullRequestStub = when(jest
+        .spyOn(codeSuggester, 'createPullRequest')
+        .mockResolvedValue(1);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('existing-file', 'main')
+        .mockResolvedValue({
           sha: 'abc123',
           content: 'somecontent',
           parsedContent: 'somecontent',
           mode: '100644',
         });
-      sandbox.stub(github, 'getPullRequest').withArgs(1).resolves({
+      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
         title: 'created title',
         headBranchName: 'release-please--branches--main',
         baseBranchName: 'main',
@@ -978,14 +975,14 @@ describe('GitHub', () => {
       expect(changes!.get('existing-file')).toBeDefined();
     });
     it('should handle missing files', async () => {
-      const createPullRequestStub = sandbox
-        .stub(codeSuggester, 'createPullRequest')
-        .resolves(1);
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('missing-file', 'main')
+      const createPullRequestStub = when(jest
+        .spyOn(codeSuggester, 'createPullRequest')
+        .mockResolvedValue(1);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('missing-file', 'main')
         .rejects(new FileNotFoundError('missing-file'));
-      sandbox.stub(github, 'getPullRequest').withArgs(1).resolves({
+      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
         title: 'created title',
         headBranchName: 'release-please--branches--main',
         baseBranchName: 'main',
@@ -1018,14 +1015,14 @@ describe('GitHub', () => {
       expect(changes!.size).toEqual(0);
     });
     it('should create missing file', async () => {
-      const createPullRequestStub = sandbox
-        .stub(codeSuggester, 'createPullRequest')
-        .resolves(1);
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('missing-file', 'main')
+      const createPullRequestStub = when(jest
+        .spyOn(codeSuggester, 'createPullRequest')
+        .mockResolvedValue(1);
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('missing-file', 'main')
         .rejects(new FileNotFoundError('missing-file'));
-      sandbox.stub(github, 'getPullRequest').withArgs(1).resolves({
+      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
         title: 'created title',
         headBranchName: 'release-please--branches--main',
         baseBranchName: 'main',
@@ -1168,9 +1165,9 @@ describe('GitHub', () => {
         updates: [],
       };
       const pullRequestOverflowHandler = new MockPullRequestOverflowHandler();
-      const handleOverflowStub = sandbox
-        .stub(pullRequestOverflowHandler, 'handleOverflow')
-        .resolves('overflow message');
+      const handleOverflowStub = when(jest
+        .spyOn(pullRequestOverflowHandler, 'handleOverflow')
+        .mockResolvedValue('overflow message');
       await github.updatePullRequest(123, pullRequest, 'main', {
         pullRequestOverflowHandler,
       });

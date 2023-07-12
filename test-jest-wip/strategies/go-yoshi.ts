@@ -21,6 +21,7 @@ import {TagName} from '../../src/util/tag-name';
 import {Version} from '../../src/version';
 import {Changelog} from '../../src/updaters/changelog';
 import {VersionGo} from '../../src/updaters/go/version-go';
+import {when} from 'jest-when';
 
 const COMMITS = [
   ...buildMockConventionalCommit(
@@ -95,10 +96,9 @@ describe('GoYoshi', () => {
   });
   describe('buildReleasePullRequest', () => {
     it('filters out submodule commits', async () => {
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('go.mod', 'main')
-        .resolves(['go.mod', 'internal/go.mod', 'logging/go.mod']);
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('go.mod', 'main')
+        .mockResolvedValue(['go.mod', 'internal/go.mod', 'logging/go.mod']);
       const strategy = new GoYoshi({
         targetBranch: 'main',
         github,
@@ -116,10 +116,9 @@ describe('GoYoshi', () => {
       expect(dateSafe(pullRequestBody)).toMatchSnapshot();
     });
     it('filters out touched files not matching submodule commits', async () => {
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('go.mod', 'main')
-        .resolves(['go.mod', 'internal/go.mod', 'logging/go.mod']);
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('go.mod', 'main')
+        .mockResolvedValue(['go.mod', 'internal/go.mod', 'logging/go.mod']);
       const strategy = new GoYoshi({
         targetBranch: 'main',
         github,
@@ -195,10 +194,9 @@ describe('GoYoshi', () => {
       expect(ignoredSubModules.size).toEqual(0);
     });
     it('fetches the list of submodules', async () => {
-      sandbox
-        .stub(github, 'findFilesByFilenameAndRef')
-        .withArgs('go.mod', 'main')
-        .resolves([
+      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+        .calledWith('go.mod', 'main')
+        .mockResolvedValue([
           'storage/go.mod',
           'go.mod',
           'internal/foo/go.mod',

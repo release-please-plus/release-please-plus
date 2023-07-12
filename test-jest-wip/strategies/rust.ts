@@ -92,13 +92,15 @@ describe('Rust', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = sandbox.stub(
+      const getFileContentsStub = jest.spyOn(
         github,
         'getFileContentsOnBranch'
       );
       getFileContentsStub
-        .withArgs('Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo-crate1.toml'));
+        .calledWith('Cargo.toml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'Cargo-crate1.toml')
+        );
       const pullRequest = await strategy.buildReleasePullRequest(
         COMMITS,
         latestRelease
@@ -129,12 +131,12 @@ describe('Rust Crate', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo.toml'))
-        .withArgs('Cargo.lock', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo.lock'));
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('Cargo.toml', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'Cargo.toml'))
+        .calledWith('Cargo.lock', 'main')
+        .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'Cargo.lock'));
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -172,10 +174,12 @@ describe('Rust Workspace', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml'));
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('Cargo.toml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml')
+        );
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
@@ -193,14 +197,20 @@ describe('Rust Workspace', () => {
         github,
         component: 'google-cloud-automl',
       });
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml'))
-        .withArgs('crates/crate1/Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo-crate1.toml'))
-        .withArgs('crates/crate2/Cargo.toml', 'main')
-        .resolves(buildGitHubFileContent(fixturesPath, 'Cargo-crate2.toml'));
+      when(jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .calledWith('Cargo.toml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml')
+        )
+        .calledWith('crates/crate1/Cargo.toml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'Cargo-crate1.toml')
+        )
+        .calledWith('crates/crate2/Cargo.toml', 'main')
+        .mockResolvedValue(
+          buildGitHubFileContent(fixturesPath, 'Cargo-crate2.toml')
+        );
       const latestRelease = undefined;
       const release = await strategy.buildReleasePullRequest(
         COMMITS,
