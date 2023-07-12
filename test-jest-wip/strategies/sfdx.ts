@@ -18,7 +18,7 @@ import {
   buildGitHubFileContent,
   assertHasUpdate,
 } from '../helpers';
-import * as nock from 'nock';
+import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nock from 'nock';
+import nock from 'nock';
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
@@ -21,9 +21,10 @@ import {
   PullRequestOverflowHandler,
   FilePullRequestOverflowHandler,
 } from '../../src/util/pull-request-overflow-handler';
-import {PullRequestBody} from '../../src/util/pull-request-body';
+import {PullRequestBody, ReleaseData} from '../../src/util/pull-request-body';
 import {PullRequestTitle} from '../../src/util/pull-request-title';
 import {buildGitHubFileRaw} from '../helpers';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 const fixturesPath = './test/fixtures/release-notes';
@@ -43,7 +44,7 @@ describe('FilePullRequestOverflowHandler', () => {
     jest.restoreAllMocks();
   });
   describe('handleOverflow', () => {
-    const data = [];
+    const data = [] as ReleaseData[];
     for (let i = 0; i < 10; i++) {
       data.push({
         notes: `release notes: ${i}`,
@@ -51,9 +52,9 @@ describe('FilePullRequestOverflowHandler', () => {
     }
     const body = new PullRequestBody(data);
     it('writes large pull request body contents to a file', async () => {
-      const createFileStub = sandbox
-        .stub(github, 'createFileOnNewBranch')
-        .resolves(
+      const createFileStub = jest
+        .spyOn(github, 'createFileOnNewBranch')
+        .mockResolvedValue(
           'https://github.com/test-owner/test-repo/blob/my-head-branch--release-notes/release-notes.md'
         );
       const newContents = await overflowHandler.handleOverflow(
@@ -68,7 +69,7 @@ describe('FilePullRequestOverflowHandler', () => {
         50
       );
       expect(newContents).toMatchSnapshot();
-      sinon.toHaveBeenCalledTimes(1);
+      expect(createFileStub).toHaveBeenCalledOnce();
     });
     it('ignores small pull request body contents', async () => {
       const newContents = await overflowHandler.handleOverflow({
@@ -92,10 +93,9 @@ describe('FilePullRequestOverflowHandler', () => {
         resolve(fixturesPath, './multiple.txt'),
         'utf8'
       );
-      sandbox
-        .stub(github, 'getFileContentsOnBranch')
-        .withArgs('release-notes.md', 'my-head-branch--release-notes')
-        .resolves(buildGitHubFileRaw(overflowBody));
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
+        .calledWith('release-notes.md', 'my-head-branch--release-notes')
+        .mockResolvedValue(buildGitHubFileRaw(overflowBody));
       const pullRequestBody = await overflowHandler.parseOverflow({
         title: 'chore: release main',
         body,

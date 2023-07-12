@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nock from 'nock';
+import nock from 'nock';
 import 'jest-extended';
 import {safeSnapshot} from '../helpers';
 import {PullRequestBody} from '../../src/util/pull-request-body';
