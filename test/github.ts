@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as nock from 'nock';
+import nock from 'nock';
 import {expect} from 'chai';
 import {afterEach, beforeEach, describe, it} from 'mocha';
 nock.disableNetConnect();
@@ -20,7 +20,7 @@ nock.disableNetConnect();
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 
 import {GH_API_URL, GitHub, GitHubRelease} from '../src/github';
 import {PullRequest} from '../src/pull-request';
