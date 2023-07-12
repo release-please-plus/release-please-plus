@@ -6,7 +6,7 @@ module.exports = {
     escapeString: false,
     printBasicPrototype: false,
   },
-  // silent: true,
+  silent: true,
   setupFilesAfterEnv: ['<rootDir>/test-jest/_setup.ts'],
   globalSetup: '<rootDir>/test-jest/_globalSetup.ts',
 };

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import 'jest-extended';
 import createMockInstance from 'jest-create-mock-instance';
 import {Manifest} from '../src/manifest';
 import {GitHub, ReleaseOptions} from '../src/github';
