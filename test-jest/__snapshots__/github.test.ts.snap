@@ -505,7 +505,7 @@ exports[`GitHub createRelease should create a release with a package prefix 1`] 
 }
 `;
 
-exports[`GitHub createRelease should raise a DuplicateReleaseError if already_exists jjcjr 1`] = `
+exports[`GitHub createRelease should raise a DuplicateReleaseError if already_exists 1`] = `
 {
   "body": "Some release notes",
   "draft": false,

@@ -796,7 +796,7 @@ describe('GitHub', () => {
       expect(release.notes).toEqual('Some release notes response.');
     });
 
-    it('should raise a DuplicateReleaseError if already_exists jjcjr', async () => {
+    it('should raise a DuplicateReleaseError if already_exists', async () => {
       const github = await GitHub.create(gitHubConfig);
 
       req
