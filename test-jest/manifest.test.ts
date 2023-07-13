@@ -5197,7 +5197,7 @@ describe('Manifest', () => {
   });
 
   describe('createReleases', () => {
-    it('jjcjr should handle a single manifest release', async () => {
+    it('should handle a single manifest release', async () => {
       mockPullRequests(
         github,
         [],

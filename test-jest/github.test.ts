@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'jest-extended';
 import nock from 'nock';
-nock.disableNetConnect();
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
@@ -27,7 +27,7 @@ import {
   GitHubAPIError,
   FileNotFoundError,
 } from '../src/errors';
-import {fail} from 'assert';
+
 import {PullRequestBody} from '../src/util/pull-request-body';
 import {PullRequestTitle} from '../src/util/pull-request-title';
 import * as codeSuggester from 'code-suggester';
@@ -36,39 +36,30 @@ import {HttpsProxyAgent} from 'https-proxy-agent';
 import {HttpProxyAgent} from 'http-proxy-agent';
 import {Commit} from '../src/commit';
 import {mockReleaseData, MockPullRequestOverflowHandler} from './helpers';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures';
+nock.disableNetConnect();
 
 describe('GitHub', () => {
-  let github: GitHub;
-  let req: nock.Scope;
+  const gitHubConfig = {
+    owner: 'fake',
+    repo: 'fake',
+    defaultBranch: 'main',
+  };
 
-  function getNock() {
-    return nock('https://api.github.com/')
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('create', () => {
+    const req = nock('https://api.github.com/')
       .get('/repos/fake/fake')
       .optionally()
       .reply(200, {
         default_branch: 'main',
       });
-  }
 
-  beforeEach(async () => {
-    // Reset this before each test so we get a consistent
-    // set of requests (some things are cached).
-    github = await GitHub.create({
-      owner: 'fake',
-      repo: 'fake',
-      defaultBranch: 'main',
-    });
-
-    // This shared nock will take care of some common requests.
-    req = getNock();
-  });
-  afterEach(() => {
-    sandbox.mockRestore();
-  });
-
-  describe('create', () => {
     it('allows configuring the default branch explicitly', async () => {
       const github = await GitHub.create({
         owner: 'some-owner',
@@ -123,7 +114,15 @@ describe('GitHub', () => {
   });
 
   describe('findFilesByFilename', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('returns files matching the requested pattern', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const fileSearchResponse = JSON.parse(
         readFileSync(resolve(fixturesPath, 'pom-file-search.json'), 'utf8')
       );
@@ -146,6 +145,7 @@ describe('GitHub', () => {
     ];
     prefixes.forEach(prefix => {
       it(`scopes pattern matching files to prefix(${prefix})`, async () => {
+        const github = await GitHub.create(gitHubConfig);
         const fileSearchResponse = JSON.parse(
           readFileSync(
             resolve(fixturesPath, 'pom-file-search-with-prefix.json'),
@@ -163,7 +163,15 @@ describe('GitHub', () => {
   });
 
   describe('findFilesByExtension', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('returns files matching the requested pattern', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const fileSearchResponse = JSON.parse(
         readFileSync(resolve(fixturesPath, 'pom-file-search.json'), 'utf8')
       );
@@ -186,6 +194,7 @@ describe('GitHub', () => {
     ];
     prefixes.forEach(prefix => {
       it(`scopes pattern matching files to prefix(${prefix})`, async () => {
+        const github = await GitHub.create(gitHubConfig);
         const fileSearchResponse = JSON.parse(
           readFileSync(
             resolve(fixturesPath, 'pom-file-search-with-prefix.json'),
@@ -201,6 +210,7 @@ describe('GitHub', () => {
       });
     });
     it('ensures the prefix is a directory', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const fileSearchResponse = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'pom-file-search-with-prefix.json'),
@@ -217,6 +227,14 @@ describe('GitHub', () => {
   });
 
   describe('getFileContents', () => {
+    let req: nock.Scope;
+    req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     beforeEach(() => {
       const dataAPITreesResponse = JSON.parse(
         readFileSync(
@@ -233,6 +251,7 @@ describe('GitHub', () => {
         .reply(200, dataAPITreesResponse);
     });
     it('should support Github Data API in case of a big file', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const dataAPIBlobResponse = JSON.parse(
         readFileSync(
           resolve(
@@ -262,14 +281,26 @@ describe('GitHub', () => {
     });
 
     it('should throw a missing file error', async () => {
-      await assert.rejects(async () => {
+      const github = await GitHub.create(gitHubConfig);
+      expect.assertions(1);
+      try {
         await github.getFileContents('non-existent-file');
-      }, FileNotFoundError);
+      } catch (e) {
+        expect(e).toBeInstanceOf(FileNotFoundError);
+      }
     });
   });
 
   describe('pullRequestIterator', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('finds merged pull requests with labels', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'merged-pull-requests.json'), 'utf8')
       );
@@ -286,6 +317,7 @@ describe('GitHub', () => {
       req.done();
     });
     it('handles merged pull requests without files', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'merged-pull-requests-no-files.json'),
@@ -305,6 +337,7 @@ describe('GitHub', () => {
       req.done();
     });
     it('uses REST API if files are not needed', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req
         .get(
           '/repos/fake/fake/pulls?base=main&state=closed&sort=updated&direction=desc'
@@ -364,7 +397,15 @@ describe('GitHub', () => {
   });
 
   describe('commitsSince', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('finds commits up until a condition', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'commits-since.json'), 'utf8')
       );
@@ -385,6 +426,7 @@ describe('GitHub', () => {
     });
 
     it('paginates through commits', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql1 = JSON.parse(
         readFileSync(resolve(fixturesPath, 'commits-since-page-1.json'), 'utf8')
       );
@@ -414,6 +456,7 @@ describe('GitHub', () => {
     });
 
     it('finds first commit of a multi-commit merge pull request', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'commits-since.json'), 'utf8')
       );
@@ -434,6 +477,7 @@ describe('GitHub', () => {
     });
 
     it('limits pagination', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql1 = JSON.parse(
         readFileSync(resolve(fixturesPath, 'commits-since-page-1.json'), 'utf8')
       );
@@ -457,6 +501,7 @@ describe('GitHub', () => {
     });
 
     it('returns empty commits if branch does not exist', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'commits-since-missing-branch.json'),
@@ -478,6 +523,7 @@ describe('GitHub', () => {
     });
 
     it('backfills commit files without pull requests', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'commits-since.json'), 'utf8')
       );
@@ -513,6 +559,7 @@ describe('GitHub', () => {
     });
 
     it('backfills commit files for pull requests with lots of files', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'commits-since-many-files.json'),
@@ -544,7 +591,15 @@ describe('GitHub', () => {
   });
 
   describe('mergeCommitIterator', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('handles merged pull requests without files', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'commits-since-no-files.json'),
@@ -566,7 +621,15 @@ describe('GitHub', () => {
   });
 
   describe('getCommitFiles', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('fetches the list of files', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req
         .get('/repos/fake/fake/commits/abc123')
         .reply(200, {files: [{filename: 'abc'}]});
@@ -576,6 +639,7 @@ describe('GitHub', () => {
     });
 
     it('paginates', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req
         .get('/repos/fake/fake/commits/abc123')
         .reply(
@@ -594,7 +658,15 @@ describe('GitHub', () => {
   });
 
   describe('releaseIterator', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('iterates through releases', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'releases.json'), 'utf8')
       );
@@ -610,6 +682,7 @@ describe('GitHub', () => {
     });
 
     it('iterates through up to 3 releases', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'releases.json'), 'utf8')
       );
@@ -625,6 +698,7 @@ describe('GitHub', () => {
     });
 
     it('correctly identifies draft releases', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const graphql = JSON.parse(
         readFileSync(resolve(fixturesPath, 'releases.json'), 'utf8')
       );
@@ -642,6 +716,7 @@ describe('GitHub', () => {
     });
 
     it('iterates through a result withouth releases', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req.post('/graphql').reply(200, {
         data: {
           repository: {
@@ -665,14 +740,20 @@ describe('GitHub', () => {
   });
 
   describe('createRelease', () => {
-    let githubCreateReleaseSpy: jest.SpyInstance;
-    beforeEach(async () => {
-      githubCreateReleaseSpy = sandbox.spy(
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
+    it('should create a release with a package prefix', async () => {
+      const github = await GitHub.create(gitHubConfig);
+      const githubCreateReleaseSpy = jest.spyOn(
         github['octokit'].repos,
         'createRelease'
       );
-    });
-    it('should create a release with a package prefix', async () => {
+
       req
         .post('/repos/fake/fake/releases', body => {
           expect(body).toMatchSnapshot();
@@ -694,7 +775,7 @@ describe('GitHub', () => {
         notes: 'Some release notes',
       });
       req.done();
-      sinon.assert.calledOnceWithExactly(githubCreateReleaseSpy, {
+      expect(githubCreateReleaseSpy).toHaveBeenCalledExactlyOnceWith({
         name: undefined,
         owner: 'fake',
         repo: 'fake',
@@ -715,7 +796,9 @@ describe('GitHub', () => {
       expect(release.notes).toEqual('Some release notes response.');
     });
 
-    it('should raise a DuplicateReleaseError if already_exists', async () => {
+    it('should raise a DuplicateReleaseError if already_exists jjcjr', async () => {
+      const github = await GitHub.create(gitHubConfig);
+
       req
         .post('/repos/fake/fake/releases', body => {
           expect(body).toMatchSnapshot();
@@ -734,22 +817,23 @@ describe('GitHub', () => {
             'https://docs.github.com/rest/reference/repos#create-a-release',
         });
 
-      const promise = github.createRelease({
-        tag: new TagName(Version.parse('1.2.3')),
-        sha: 'abc123',
-        notes: 'Some release notes',
-      });
-      await assert.rejects(promise, error => {
-        return (
-          error instanceof DuplicateReleaseError &&
-          // ensure stack contains calling method
-          error.stack?.includes('GitHub.createRelease') &&
-          !!error.cause
-        );
+      await expect(
+        github.createRelease({
+          tag: new TagName(Version.parse('1.2.3')),
+          sha: 'abc123',
+          notes: 'Some release notes',
+        })
+      ).rejects.toSatisfy(error => {
+        expect(error).toBeInstanceOf(DuplicateReleaseError);
+        expect(error.stack).toInclude('GitHub.createRelease');
+        expect(error.cause).toBeTruthy();
+        return true;
       });
     });
 
     it('should raise a RequestError for other validation errors', async () => {
+      const github = await GitHub.create(gitHubConfig);
+
       req
         .post('/repos/fake/fake/releases', body => {
           expect(body).toMatchSnapshot();
@@ -761,22 +845,28 @@ describe('GitHub', () => {
             'https://docs.github.com/rest/reference/repos#create-a-release',
         });
 
-      const promise = github.createRelease({
-        tag: new TagName(Version.parse('1.2.3')),
-        sha: 'abc123',
-        notes: 'Some release notes',
-      });
-      await assert.rejects(promise, error => {
-        return (
-          error instanceof GitHubAPIError &&
-          // ensure stack contains calling method
-          error.stack?.includes('GitHub.createRelease') &&
-          !!error.cause
-        );
+      expect.assertions(5);
+      await expect(
+        github.createRelease({
+          tag: new TagName(Version.parse('1.2.3')),
+          sha: 'abc123',
+          notes: 'Some release notes',
+        })
+      ).rejects.toSatisfy(error => {
+        expect(error).toBeInstanceOf(GitHubAPIError);
+        expect(error.stack).toInclude('GitHub.createRelease');
+        expect(error.cause).toBeTruthy();
+        return true;
       });
     });
 
     it('should create a draft release', async () => {
+      const github = await GitHub.create(gitHubConfig);
+      const githubCreateReleaseSpy = jest.spyOn(
+        github['octokit'].repos,
+        'createRelease'
+      );
+
       req
         .post('/repos/fake/fake/releases', body => {
           expect(body).toMatchSnapshot();
@@ -799,7 +889,7 @@ describe('GitHub', () => {
         {draft: true}
       );
       req.done();
-      sinon.assert.calledOnceWithExactly(githubCreateReleaseSpy, {
+      expect(githubCreateReleaseSpy).toHaveBeenCalledExactlyOnceWith({
         name: undefined,
         owner: 'fake',
         repo: 'fake',
@@ -816,6 +906,12 @@ describe('GitHub', () => {
     });
 
     it('should create a prerelease release', async () => {
+      const github = await GitHub.create(gitHubConfig);
+      const githubCreateReleaseSpy = jest.spyOn(
+        github['octokit'].repos,
+        'createRelease'
+      );
+
       req
         .post('/repos/fake/fake/releases', body => {
           expect(body).toMatchSnapshot();
@@ -839,7 +935,7 @@ describe('GitHub', () => {
         {prerelease: true}
       );
       req.done();
-      sinon.assert.calledOnceWithExactly(githubCreateReleaseSpy, {
+      expect(githubCreateReleaseSpy).toHaveBeenCalledExactlyOnceWith({
         name: undefined,
         owner: 'fake',
         repo: 'fake',
@@ -857,7 +953,15 @@ describe('GitHub', () => {
   });
 
   describe('commentOnIssue', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('can create a comment', async () => {
+      const github = await GitHub.create(gitHubConfig);
       const createCommentResponse = JSON.parse(
         readFileSync(
           resolve(fixturesPath, 'create-comment-response.json'),
@@ -877,6 +981,7 @@ describe('GitHub', () => {
     });
 
     it('propagates error', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req.post('/repos/fake/fake/issues/1347/comments').reply(410, 'Gone');
       let thrown = false;
       try {
@@ -891,7 +996,15 @@ describe('GitHub', () => {
   });
 
   describe('generateReleaseNotes', () => {
+    const req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('can generate notes with previous tag', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req
         .post('/repos/fake/fake/releases/generate-notes', body => {
           expect(body).toMatchSnapshot();
@@ -911,6 +1024,7 @@ describe('GitHub', () => {
       );
     });
     it('can generate notes without previous tag', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req
         .post('/repos/fake/fake/releases/generate-notes', body => {
           expect(body).toMatchSnapshot();
@@ -929,11 +1043,11 @@ describe('GitHub', () => {
 
   describe('createReleasePullRequest', () => {
     it('should update file', async () => {
-      const createPullRequestStub = when(jest
+      const github = await GitHub.create(gitHubConfig);
+      const createPullRequestStub = jest
         .spyOn(codeSuggester, 'createPullRequest')
         .mockResolvedValue(1);
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('existing-file', 'main')
         .mockResolvedValue({
           sha: 'abc123',
@@ -941,15 +1055,17 @@ describe('GitHub', () => {
           parsedContent: 'somecontent',
           mode: '100644',
         });
-      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
-        title: 'created title',
-        headBranchName: 'release-please--branches--main',
-        baseBranchName: 'main',
-        number: 1,
-        body: 'some body',
-        labels: [],
-        files: [],
-      });
+      when(jest.spyOn(github, 'getPullRequest'))
+        .calledWith(1)
+        .mockResolvedValue({
+          title: 'created title',
+          headBranchName: 'release-please--branches--main',
+          baseBranchName: 'main',
+          number: 1,
+          body: 'some body',
+          labels: [],
+          files: [],
+        });
       const pullRequest = await github.createReleasePullRequest(
         {
           title: PullRequestTitle.ofTargetBranch('main'),
@@ -968,29 +1084,31 @@ describe('GitHub', () => {
         'main'
       );
       expect(pullRequest.number).toEqual(1);
-      sinon.toHaveBeenCalledTimes(1);
+      expect(createPullRequestStub).toHaveBeenCalledOnce();
       const changes = createPullRequestStub.mock.calls[0][1];
       expect(changes).toBeDefined();
       expect(changes!.size).toEqual(1);
       expect(changes!.get('existing-file')).toBeDefined();
     });
     it('should handle missing files', async () => {
-      const createPullRequestStub = when(jest
+      const github = await GitHub.create(gitHubConfig);
+      const createPullRequestStub = jest
         .spyOn(codeSuggester, 'createPullRequest')
         .mockResolvedValue(1);
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('missing-file', 'main')
-        .rejects(new FileNotFoundError('missing-file'));
-      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
-        title: 'created title',
-        headBranchName: 'release-please--branches--main',
-        baseBranchName: 'main',
-        number: 1,
-        body: 'some body',
-        labels: [],
-        files: [],
-      });
+        .mockRejectedValue(new FileNotFoundError('missing-file'));
+      when(jest.spyOn(github, 'getPullRequest'))
+        .calledWith(1)
+        .mockResolvedValue({
+          title: 'created title',
+          headBranchName: 'release-please--branches--main',
+          baseBranchName: 'main',
+          number: 1,
+          body: 'some body',
+          labels: [],
+          files: [],
+        });
       const pullRequest = await github.createReleasePullRequest(
         {
           title: PullRequestTitle.ofTargetBranch('main'),
@@ -1009,28 +1127,30 @@ describe('GitHub', () => {
         'main'
       );
       expect(pullRequest.number).toEqual(1);
-      sinon.toHaveBeenCalledTimes(1);
+      expect(createPullRequestStub).toHaveBeenCalledOnce();
       const changes = createPullRequestStub.mock.calls[0][1];
       expect(changes).toBeDefined();
       expect(changes!.size).toEqual(0);
     });
     it('should create missing file', async () => {
-      const createPullRequestStub = when(jest
+      const github = await GitHub.create(gitHubConfig);
+      const createPullRequestStub = jest
         .spyOn(codeSuggester, 'createPullRequest')
         .mockResolvedValue(1);
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('missing-file', 'main')
-        .rejects(new FileNotFoundError('missing-file'));
-      jest.spyOn(github, 'getPullRequest').calledWith(1).mockResolvedValue({
-        title: 'created title',
-        headBranchName: 'release-please--branches--main',
-        baseBranchName: 'main',
-        number: 1,
-        body: 'some body',
-        labels: [],
-        files: [],
-      });
+        .mockRejectedValue(new FileNotFoundError('missing-file'));
+      when(jest.spyOn(github, 'getPullRequest'))
+        .calledWith(1)
+        .mockResolvedValue({
+          title: 'created title',
+          headBranchName: 'release-please--branches--main',
+          baseBranchName: 'main',
+          number: 1,
+          body: 'some body',
+          labels: [],
+          files: [],
+        });
       const pullRequest = await github.createReleasePullRequest(
         {
           title: PullRequestTitle.ofTargetBranch('main'),
@@ -1049,7 +1169,7 @@ describe('GitHub', () => {
         'main'
       );
       expect(pullRequest.number).toEqual(1);
-      sinon.toHaveBeenCalledTimes(1);
+      expect(createPullRequestStub).toHaveBeenCalledOnce();
       const changes = createPullRequestStub.mock.calls[0][1];
       expect(changes).toBeDefined();
       expect(changes!.size).toEqual(1);
@@ -1058,7 +1178,15 @@ describe('GitHub', () => {
   });
 
   describe('createFileOnNewBranch', () => {
+    let req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('forks a new branch if the branch does not exist', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req = req
         .get('/repos/fake/fake/git/ref/heads%2Fbase-branch')
         .reply(200, {
@@ -1098,6 +1226,7 @@ describe('GitHub', () => {
       expect(url).toEqual('https://github.com/fake/fake/blob/new-file.txt');
     });
     it('reuses an existing branch', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req = req
         .get('/repos/fake/fake/git/ref/heads%2Fbase-branch')
         .reply(200, {
@@ -1143,7 +1272,15 @@ describe('GitHub', () => {
   });
 
   describe('updatePullRequest', () => {
+    let req = nock('https://api.github.com/')
+      .get('/repos/fake/fake')
+      .optionally()
+      .reply(200, {
+        default_branch: 'main',
+      });
+
     it('handles a PR body that is too big', async () => {
+      const github = await GitHub.create(gitHubConfig);
       req = req.patch('/repos/fake/fake/pulls/123').reply(200, {
         number: 123,
         title: 'updated-title',
@@ -1165,13 +1302,13 @@ describe('GitHub', () => {
         updates: [],
       };
       const pullRequestOverflowHandler = new MockPullRequestOverflowHandler();
-      const handleOverflowStub = when(jest
+      const handleOverflowStub = jest
         .spyOn(pullRequestOverflowHandler, 'handleOverflow')
         .mockResolvedValue('overflow message');
       await github.updatePullRequest(123, pullRequest, 'main', {
         pullRequestOverflowHandler,
       });
-      sinon.toHaveBeenCalledTimes(1);
+      expect(handleOverflowStub).toHaveBeenCalledOnce();
       req.done();
     });
   });
