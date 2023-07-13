@@ -27,6 +27,7 @@ import {Changelog} from '../../src/updaters/changelog';
 import {EsyJson} from '../../src/updaters/ocaml/esy-json';
 import {Opam} from '../../src/updaters/ocaml/opam';
 import {DuneProject} from '../../src/updaters/ocaml/dune-project';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/strategies/ocaml';
 
@@ -114,11 +115,13 @@ describe('OCaml', () => {
         component: 'google-cloud-automl',
       });
       const findFilesStub = jest.spyOn(github, 'findFilesByExtension');
-      findFilesStub
+      when(findFilesStub)
         .calledWith('json', '.')
         .mockResolvedValue(['esy.json', 'other.json']);
-      findFilesStub.calledWith('opam', '.').mockResolvedValue(['sample.opam']);
-      findFilesStub
+      when(findFilesStub)
+        .calledWith('opam', '.')
+        .mockResolvedValue(['sample.opam']);
+      when(findFilesStub)
         .calledWith('opam.locked', '.')
         .mockResolvedValue(['sample.opam.locked']);
       stubFilesFromFixtures({

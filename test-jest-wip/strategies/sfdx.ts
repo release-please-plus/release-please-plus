@@ -27,6 +27,7 @@ import {Changelog} from '../../src/updaters/changelog';
 import {SfdxProjectJson} from '../../src/updaters/sfdx/sfdx-project-json';
 import * as assert from 'assert';
 import {MissingRequiredFileError, FileNotFoundError} from '../../src/errors';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 
@@ -100,11 +101,8 @@ describe('Sfdx', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('sfdx-project.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'sfdx-project.json')
@@ -132,11 +130,8 @@ describe('Sfdx', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('sfdx-project.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'sfdx-project.json')
@@ -148,9 +143,9 @@ describe('Sfdx', () => {
       expect(pullRequest!.version?.toString()).toEqual(expectedVersion);
     });
     it('handles missing sfdx-project.json', async () => {
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
-        .rejects(new FileNotFoundError('stub/path'));
+        .mockRejectedValue(new FileNotFoundError('stub/path'));
       const strategy = new Sfdx({
         targetBranch: 'main',
         github,

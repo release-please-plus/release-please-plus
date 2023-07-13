@@ -21,6 +21,7 @@ import {Version} from '../../src/version';
 import {Changelog} from '../../src/updaters/changelog';
 import {ReadMe} from '../../src/updaters/terraform/readme';
 import {ModuleVersion} from '../../src/updaters/terraform/module-version';
+import {when} from 'jest-when';
 
 const COMMITS = [
   ...buildMockConventionalCommit(
@@ -104,16 +105,16 @@ describe('TerraformModule', () => {
         component: 'google-cloud-automl',
       });
       const findFilesStub = jest.spyOn(github, 'findFilesByFilenameAndRef');
-      findFilesStub
+      when(findFilesStub)
         .calledWith('readme.md', 'main', '.')
         .mockResolvedValue(['path1/readme.md', 'path2/readme.md']);
-      findFilesStub
+      when(findFilesStub)
         .calledWith('README.md', 'main', '.')
         .mockResolvedValue(['README.md', 'path3/README.md']);
-      findFilesStub
+      when(findFilesStub)
         .calledWith('versions.tf', 'main', '.')
         .mockResolvedValue(['path1/versions.tf', 'path2/versions.tf']);
-      findFilesStub
+      when(findFilesStub)
         .calledWith('versions.tf.tmpl', 'main', '.')
         .mockResolvedValue([
           'path1/versions.tf.tmpl',

@@ -22,6 +22,7 @@ import {Version} from '../../src/version';
 import {Changelog} from '../../src/updaters/changelog';
 import {CargoLock} from '../../src/updaters/rust/cargo-lock';
 import {CargoToml} from '../../src/updaters/rust/cargo-toml';
+import {when} from 'jest-when';
 
 const COMMITS = [
   ...buildMockConventionalCommit(
@@ -92,11 +93,8 @@ describe('Rust', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('Cargo.toml', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'Cargo-crate1.toml')
@@ -131,8 +129,7 @@ describe('Rust Crate', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('Cargo.toml', 'main')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'Cargo.toml'))
         .calledWith('Cargo.lock', 'main')
@@ -174,8 +171,7 @@ describe('Rust Workspace', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('Cargo.toml', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml')
@@ -197,8 +193,7 @@ describe('Rust Workspace', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
-        .spyOn(github, 'getFileContentsOnBranch')
+      when(jest.spyOn(github, 'getFileContentsOnBranch'))
         .calledWith('Cargo.toml', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'Cargo-workspace.toml')

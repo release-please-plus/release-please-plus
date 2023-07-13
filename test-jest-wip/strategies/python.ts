@@ -25,6 +25,7 @@ import {SetupCfg} from '../../src/updaters/python/setup-cfg';
 import {SetupPy} from '../../src/updaters/python/setup-py';
 import {Changelog} from '../../src/updaters/changelog';
 import {ChangelogJson} from '../../src/updaters/changelog-json';
+import {when} from 'jest-when';
 
 const fixturesPath = './test/fixtures/strategies/python';
 
@@ -63,7 +64,7 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
@@ -81,7 +82,7 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
@@ -104,7 +105,7 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
@@ -145,7 +146,7 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
         .mockResolvedValue(
           buildGitHubFileContent('./test/updaters/fixtures', 'pyproject.toml')
@@ -166,10 +167,10 @@ describe('Python', () => {
         github,
         component: 'google-cloud-automl',
       });
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
-      when(jest
+      jest
         .spyOn(github, 'findFilesByFilenameAndRef')
         .mockResolvedValue(['src/version.py']);
       const latestRelease = undefined;
@@ -199,16 +200,13 @@ describe('Python', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('changelog.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'changelog.json')
         );
-      getFileContentsStub
+      when(getFileContentsStub)
         .calledWith('setup.py', 'main')
         .mockResolvedValue(buildGitHubFileContent(fixturesPath, 'setup.py'));
       const latestRelease = undefined;

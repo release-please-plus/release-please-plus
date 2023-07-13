@@ -26,10 +26,11 @@ import {DefaultUpdater} from '../../src/updaters/default';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {FileNotFoundError} from '../../src/errors';
+import {when} from 'jest-when';
 
 describe('PHPYoshi', () => {
   let github: GitHub;
-  let getFileStub: sinon.SinonStub;
+  let getFileStub: jest.SpyInstance;
   const commits = [
     ...buildMockConventionalCommit(
       'fix(deps): update dependency com.google.cloud:google-cloud-storage to v1.120.0',
@@ -48,22 +49,22 @@ describe('PHPYoshi', () => {
       defaultBranch: 'main',
     });
     getFileStub = jest.spyOn(github, 'getFileContentsOnBranch');
-    getFileStub
+    when(getFileStub)
       .calledWith('Client1/VERSION', 'main')
       .mockResolvedValue(buildGitHubFileRaw('1.2.3'));
-    getFileStub
+    when(getFileStub)
       .calledWith('Client2/VERSION', 'main')
       .mockResolvedValue(buildGitHubFileRaw('2.0.0'));
-    getFileStub
+    when(getFileStub)
       .calledWith('Client3/VERSION', 'main')
       .mockResolvedValue(buildGitHubFileRaw('0.1.2'));
-    getFileStub
+    when(getFileStub)
       .calledWith('Client1/composer.json', 'main')
       .mockResolvedValue(buildGitHubFileRaw('{"name": "google/client1"}'));
-    getFileStub
+    when(getFileStub)
       .calledWith('Client2/composer.json', 'main')
       .mockResolvedValue(buildGitHubFileRaw('{"name": "google/client2"}'));
-    getFileStub
+    when(getFileStub)
       .calledWith('Client3/composer.json', 'main')
       .mockResolvedValue(
         buildGitHubFileRaw(
@@ -180,9 +181,9 @@ describe('PHPYoshi', () => {
         ),
         ...buildMockConventionalCommit('misc: update common templates'),
       ];
-      getFileStub
+      when(getFileStub)
         .calledWith('.git/VERSION', 'main')
-        .rejects(new FileNotFoundError('.git/VERSION'));
+        .mockRejectedValue(new FileNotFoundError('.git/VERSION'));
       const release = await strategy.buildReleasePullRequest(
         commits,
         latestRelease

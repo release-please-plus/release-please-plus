@@ -30,6 +30,7 @@ import {PackageJson} from '../../src/updaters/node/package-json';
 import {ChangelogJson} from '../../src/updaters/changelog-json';
 import * as assert from 'assert';
 import {MissingRequiredFileError, FileNotFoundError} from '../../src/errors';
+import {when} from 'jest-when';
 
 nock.disableNetConnect();
 
@@ -108,11 +109,8 @@ describe('Node', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('package.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'package.json')
@@ -140,11 +138,8 @@ describe('Node', () => {
         sha: 'abc123',
         notes: 'some notes',
       };
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('package.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'package.json')
@@ -156,9 +151,9 @@ describe('Node', () => {
       expect(pullRequest!.version?.toString()).toEqual(expectedVersion);
     });
     it('handles missing package.json', async () => {
-      when(jest
+      jest
         .spyOn(github, 'getFileContentsOnBranch')
-        .rejects(new FileNotFoundError('stub/path'));
+        .mockRejectedValue(new FileNotFoundError('stub/path'));
       const strategy = new Node({
         targetBranch: 'main',
         github,
@@ -190,16 +185,13 @@ describe('Node', () => {
         component: 'google-cloud-node',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(
-        github,
-        'getFileContentsOnBranch'
-      );
-      getFileContentsStub
+      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      when(getFileContentsStub)
         .calledWith('changelog.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'changelog.json')
         );
-      getFileContentsStub
+      when(getFileContentsStub)
         .calledWith('package.json', 'main')
         .mockResolvedValue(
           buildGitHubFileContent(fixturesPath, 'package.json')
