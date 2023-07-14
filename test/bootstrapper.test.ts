@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as sinon from 'sinon';
 import {Bootstrapper} from '../src/bootstrapper';
 import {GitHub} from '../src/github';
 import {assertHasUpdate} from './helpers';
 import {ReleasePleaseManifest} from '../src/updaters/release-please-manifest';
 import {ReleasePleaseConfig} from '../src/updaters/release-please-config';
-
-const sandbox = sinon.createSandbox();
+import 'jest-extended';
 
 describe('Bootstrapper', () => {
   let github: GitHub;
@@ -32,14 +30,14 @@ describe('Bootstrapper', () => {
     });
   });
   afterEach(() => {
-    sandbox.restore();
+    jest.restoreAllMocks();
   });
   it('should open a PR', async () => {
     const expectedTitle = 'chore: bootstrap releases for path: .';
     const expectedHeadBranchName = 'release-please/bootstrap/default';
-    const createPullRequestStub = sinon
-      .stub(github, 'createPullRequest')
-      .resolves({
+    const createPullRequestStub = jest
+      .spyOn(github, 'createPullRequest')
+      .mockResolvedValue({
         headBranchName: expectedHeadBranchName,
         baseBranchName: 'main',
         title: expectedTitle,
@@ -54,18 +52,17 @@ describe('Bootstrapper', () => {
       releaseType: 'node',
     });
     expect(pullRequest.number).toEqual(123);
-    sinon.assert.calledOnceWithExactly(
-      createPullRequestStub,
-      sinon.match({
+    expect(createPullRequestStub).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
         headBranchName: expectedHeadBranchName,
         baseBranchName: 'main',
       }),
       'main',
       expectedTitle,
-      sinon.match.array,
-      sinon.match.any
+      expect.toBeArray(),
+      expect.anything()
     );
-    const updates = createPullRequestStub.firstCall.args[3];
+    const updates = createPullRequestStub.mock.calls[0][3];
     assertHasUpdate(
       updates,
       '.release-please-manifest.json',
