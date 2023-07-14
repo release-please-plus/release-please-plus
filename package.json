@@ -5,11 +5,9 @@
   "main": "./build/src/index.js",
   "bin": "./build/src/bin/release-please.js",
   "scripts": {
-    "test": "cross-env ENVIRONMENT=test NODE_OPTIONS=\"--no-experimental-fetch\" LC_ALL=en c8 mocha --recursive --timeout=15000 build/test",
-    "jest": "cross-env ENVIRONMENT=test NODE_OPTIONS=\"--no-experimental-fetch\" LC_ALL=en jest",
-    "test:update": "cross-env ENVIRONMENT=test LC_ALL=en c8 mocha --recursive --timeout=15000 build/test --update",
+    "test": "cross-env ENVIRONMENT=test NODE_OPTIONS=\"--no-experimental-fetch\" LC_ALL=en  jest",
+    "test:update": "cross-env ENVIRONMENT=test LC_ALL=en jest --update",
     "docs": "echo add docs tests",
-    "test:snap": "SNAPSHOT_UPDATE=1 LC_ALL=en npm test",
     "clean": "gts clean",
     "prepare": "npm run compile",
     "lint": "gts check",

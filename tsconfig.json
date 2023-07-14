@@ -24,9 +24,7 @@
   "include": [
     "typings/**/*.d.ts",
     "src/**/*.ts",
-    "./global.d.ts",
     // "test/**/*.ts",
     "system-test/*.ts"
-  ],
-  "files": ["node_modules/jest-extended/types/index.d.ts", "./global.d.ts"]
+  ]
 }
