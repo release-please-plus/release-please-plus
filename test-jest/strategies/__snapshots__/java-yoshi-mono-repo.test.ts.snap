@@ -2,8 +2,6 @@
 
 exports[`JavaYoshiMonoRepo buildUpdates does not update changelog.json if no .repo-metadata.json is found 1`] = `"{"entries":[]}"`;
 
-exports[`JavaYoshiMonoRepo buildUpdates does not update changelog.json if no .repo-metadata.json is found jjcjr 1`] = `"{"entries":[]}"`;
-
 exports[`JavaYoshiMonoRepo buildUpdates omits non-breaking chores from changelog.json 1`] = `
 "{
   "entries": [

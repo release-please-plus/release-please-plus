@@ -26,8 +26,6 @@ import {Maven} from '../../src/strategies/maven';
 import {PomXml} from '../../src/updaters/java/pom-xml';
 import {TagName} from '../../src/util/tag-name';
 import {Version} from '../../src/version';
-import {when} from 'jest-when';
-import {FileNotFoundError} from '../../src/errors';
 import nock from 'nock';
 
 nock.disableNetConnect();
@@ -57,11 +55,8 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      const spy = jest
+      jest
         .spyOn(github, 'findFilesByFilenameAndRef')
-        .mockRejectedValue(new FileNotFoundError(''));
-      when(spy)
-        .calledWith('pom.xml', 'main')
         .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 
       const release = await strategy.buildReleasePullRequest(
@@ -91,11 +86,8 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      const spy = jest
+      jest
         .spyOn(github, 'findFilesByFilenameAndRef')
-        .mockResolvedValue([]);
-      when(spy)
-        .calledWith('pom.xml', 'main')
         .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 
       const latestRelease = {
