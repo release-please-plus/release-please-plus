@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {CandidateReleasePullRequest} from '../manifest';
 import {
   WorkspacePlugin,
   DependencyGraph,
@@ -39,6 +38,7 @@ import {PatchVersionUpdate} from '../versioning-strategy';
 import {CargoLock} from '../updaters/rust/cargo-lock';
 import {ConfigurationError} from '../errors';
 import {ROOT_PROJECT_PATH} from '../constants';
+import {CandidateReleasePullRequest} from '../types';
 
 interface CrateInfo {
   /**

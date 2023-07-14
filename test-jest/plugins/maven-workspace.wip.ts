@@ -15,7 +15,6 @@
 import {MavenWorkspace} from '../../src/plugins/maven-workspace';
 import {GitHub} from '../../src/github';
 import {ManifestPlugin} from '../../src/plugin';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {
   buildMockCandidatePullRequest,
   buildGitHubFileContent,
@@ -30,6 +29,7 @@ import {PomXml} from '../../src/updaters/java/pom-xml';
 import {RawContent} from '../../src/updaters/raw-content';
 import {ReleasePleaseManifest} from '../../src/updaters/release-please-manifest';
 import {when} from 'jest-when';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const fixturesPath = './test/fixtures/plugins/maven-workspace';
 

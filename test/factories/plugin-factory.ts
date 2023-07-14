@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import {beforeEach, describe, it} from 'mocha';
-import {PluginType, RepositoryConfig} from '../../src/manifest';
 import {
   buildPlugin,
   getPluginTypes,
@@ -23,8 +22,9 @@ import {
 import {expect} from 'chai';
 import {LinkedVersions} from '../../src/plugins/linked-versions';
 import {ManifestPlugin} from '../../src/plugin';
-import {GitHub} from '../../src';
+import {GitHub, PluginType} from '../../src';
 import {GroupPriority} from '../../src/plugins/group-priority';
+import {RepositoryConfig} from '../../src/types';
 
 describe('PluginFactory', () => {
   let github: GitHub;

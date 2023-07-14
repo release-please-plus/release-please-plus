@@ -15,7 +15,6 @@ import {describe, it, afterEach, beforeEach} from 'mocha';
 import * as sinon from 'sinon';
 import {GitHub} from '../../src/github';
 import {Merge} from '../../src/plugins/merge';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {expect} from 'chai';
 import {
   buildMockCandidatePullRequest,
@@ -24,6 +23,7 @@ import {
 } from '../helpers';
 import {RawContent} from '../../src/updaters/raw-content';
 import {CompositeUpdater} from '../../src/updaters/composite';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const sandbox = sinon.createSandbox();
 

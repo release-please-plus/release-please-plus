@@ -22,7 +22,6 @@ import {
   WorkspacePluginOptions,
 } from './workspace';
 import {Version, VersionsMap} from '../version';
-import {CandidateReleasePullRequest, RepositoryConfig} from '../manifest';
 import * as dom from '@xmldom/xmldom';
 import * as xpath from 'xpath';
 import {dirname} from 'path';
@@ -38,6 +37,7 @@ import {JavaSnapshot} from '../versioning-strategies/java-snapshot';
 import {AlwaysBumpPatch} from '../versioning-strategies/always-bump-patch';
 import {ConventionalCommit} from '../commit';
 import {CompositeUpdater} from '../updaters/composite';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../types';
 
 interface Gav {
   groupId: string;

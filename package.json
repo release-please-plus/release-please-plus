@@ -15,7 +15,8 @@
     "lint": "gts check",
     "compile": "tsc -p .",
     "fix": "gts fix",
-    "pretest": "npm run compile"
+    "pretest": "npm run compile",
+    "circular": "npx --yes madge --extensions ts --circular ./src"
   },
   "files": [
     "build/src",

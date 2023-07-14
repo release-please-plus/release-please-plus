@@ -20,13 +20,11 @@ import * as sinon from 'sinon';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {GitHub} from '../../src';
-import {
-  PullRequestOverflowHandler,
-  FilePullRequestOverflowHandler,
-} from '../../src/util/pull-request-overflow-handler';
+import {FilePullRequestOverflowHandler} from '../../src/util/pull-request-overflow-handler';
 import {PullRequestBody} from '../../src/util/pull-request-body';
 import {PullRequestTitle} from '../../src/util/pull-request-title';
 import {buildGitHubFileRaw} from '../helpers';
+import {PullRequestOverflowHandler} from '../../src/types';
 
 nock.disableNetConnect();
 const sandbox = sinon.createSandbox();

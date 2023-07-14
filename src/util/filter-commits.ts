@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ChangelogSection} from '../changelog-notes';
 import {ConventionalCommit} from '../commit';
+import {ChangelogSection} from '../types';
 
 const BREAKING_CHANGE_NOTE = 'BREAKING CHANGE';
 

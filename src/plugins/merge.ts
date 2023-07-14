@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import {ManifestPlugin} from '../plugin';
-import {CandidateReleasePullRequest, RepositoryConfig} from '../manifest';
 import {PullRequestTitle} from '../util/pull-request-title';
 import {PullRequestBody, ReleaseData} from '../util/pull-request-body';
 import {BranchName} from '../util/branch-name';
@@ -24,6 +23,7 @@ import {
   MANIFEST_PULL_REQUEST_TITLE_PATTERN,
   ROOT_PROJECT_PATH,
 } from '../constants';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../types';
 
 interface MergeOptions {
   pullRequestTitlePattern?: string;

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import {Commit, ConventionalCommit} from './commit';
+import {ChangelogSection} from './types';
 
 export interface BuildNotesOptions {
   host?: string;
@@ -31,12 +32,6 @@ export interface ChangelogNotes {
     commits: ConventionalCommit[],
     options: BuildNotesOptions
   ): Promise<string>;
-}
-
-export interface ChangelogSection {
-  type: string;
-  section: string;
-  hidden?: boolean;
 }
 
 const DEFAULT_HEADINGS: Record<string, string> = {

@@ -27,20 +27,22 @@ import {
 import {GitHub, GitHubTag, GitHubRelease} from '../src/github';
 import {Update} from '../src/update';
 import {expect} from 'chai';
-import {CandidateReleasePullRequest} from '../src/manifest';
 import {Version} from '../src/version';
 import {PullRequestTitle} from '../src/util/pull-request-title';
 import {PullRequestBody, ReleaseData} from '../src/util/pull-request-body';
 import {BranchName} from '../src/util/branch-name';
-import {ReleaseType} from '../src/factory';
 import {
   GitHubFileContents,
   DEFAULT_FILE_MODE,
 } from '@google-automations/git-file-utils';
 import {CompositeUpdater} from '../src/updaters/composite';
-import {PullRequestOverflowHandler} from '../src/util/pull-request-overflow-handler';
 import {ReleasePullRequest} from '../src/release-pull-request';
 import {PullRequest} from '../src/pull-request';
+import {
+  CandidateReleasePullRequest,
+  PullRequestOverflowHandler,
+  ReleaseType,
+} from '../src/types';
 
 export function stubSuggesterWithSnapshot(
   sandbox: sinon.SinonSandbox,

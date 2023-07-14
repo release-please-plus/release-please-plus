@@ -48,8 +48,8 @@ import {
 import {Logger} from 'code-suggester/build/src/types';
 import {HttpsProxyAgent} from 'https-proxy-agent';
 import {HttpProxyAgent} from 'http-proxy-agent';
-import {PullRequestOverflowHandler} from './util/pull-request-overflow-handler';
 import {ROOT_PROJECT_PATH} from './constants';
+import {PullRequestOverflowHandler} from './types';
 
 // Extract some types from the `request` package.
 type RequestBuilderType = typeof request;

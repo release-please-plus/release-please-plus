@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {PluginType, RepositoryConfig} from '../../src/manifest';
 import {
   buildPlugin,
   getPluginTypes,
@@ -21,8 +20,9 @@ import {
 } from '../../src/factories/plugin-factory';
 import {LinkedVersions} from '../../src/plugins/linked-versions';
 import {ManifestPlugin} from '../../src/plugin';
-import {GitHub} from '../../src';
+import {GitHub, PluginType} from '../../src';
 import {GroupPriority} from '../../src/plugins/group-priority';
+import {RepositoryConfig} from '../../src/types';
 
 describe('PluginFactory', () => {
   let github: GitHub;

@@ -18,19 +18,19 @@ import {coerceOption} from '../util/coerce-option';
 import * as yargs from 'yargs';
 import {GitHub, GH_API_URL, GH_GRAPHQL_URL} from '../github';
 import {Manifest, ManifestOptions} from '../manifest';
-import {ChangelogSection, buildChangelogSections} from '../changelog-notes';
+import {buildChangelogSections} from '../changelog-notes';
 import {logger, setLogger, CheckpointLogger} from '../util/logger';
 import {
   getReleaserTypes,
-  ReleaseType,
   VersioningStrategyType,
-  getVersioningStrategyTypes,
   ChangelogNotesType,
-  getChangelogTypes,
 } from '../factory';
 import {Bootstrapper} from '../bootstrapper';
 import {createPatch} from 'diff';
 import {ROOT_PROJECT_PATH} from '../constants';
+import {ChangelogSection, ReleaseType} from '../types';
+import {getVersioningStrategyTypes} from '../factories/versioning-strategy-factory';
+import {getChangelogTypes} from '../factories/changelog-notes-factory';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parseGithubRepoUrl = require('parse-github-repo-url');

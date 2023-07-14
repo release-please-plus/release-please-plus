@@ -14,7 +14,6 @@
 
 import {GitHub} from '../../src/github';
 import {NodeWorkspace} from '../../src/plugins/node-workspace';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {Version} from '../../src/version';
 import {Update} from '../../src/update';
 import {PackageJson} from '../../src/updaters/node/package-json';
@@ -31,6 +30,7 @@ import {RawContent} from '../../src/updaters/raw-content';
 import {ManifestPlugin} from '../../src/plugin';
 import {Changelog} from '../../src/updaters/changelog';
 import {ReleasePleaseManifest} from '../../src/updaters/release-please-manifest';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const fixturesPath = './test/fixtures/plugins/node-workspace';
 

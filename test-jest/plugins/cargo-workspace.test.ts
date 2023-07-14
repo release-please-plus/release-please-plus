@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import {GitHub} from '../../src/github';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {Update} from '../../src/update';
 import {
   buildGitHubFileContent,
@@ -32,6 +31,7 @@ import {CargoToml} from '../../src/updaters/rust/cargo-toml';
 import {parseCargoManifest} from '../../src/updaters/rust/common';
 import {ConfigurationError} from '../../src/errors';
 import {when} from 'jest-when';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const fixturesPath = './test/fixtures/plugins/cargo-workspace';
 

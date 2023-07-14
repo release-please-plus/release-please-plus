@@ -15,7 +15,6 @@
 import {describe, it, afterEach, beforeEach} from 'mocha';
 import * as sinon from 'sinon';
 import {GitHub} from '../../src/github';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {Update} from '../../src/update';
 import {
   buildGitHubFileContent,
@@ -35,6 +34,7 @@ import {CargoToml} from '../../src/updaters/rust/cargo-toml';
 import {parseCargoManifest} from '../../src/updaters/rust/common';
 import {ConfigurationError} from '../../src/errors';
 import assert = require('assert');
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const sandbox = sinon.createSandbox();
 const fixturesPath = './test/fixtures/plugins/cargo-workspace';

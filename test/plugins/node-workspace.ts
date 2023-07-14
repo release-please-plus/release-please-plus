@@ -16,7 +16,6 @@ import {describe, it, afterEach, beforeEach} from 'mocha';
 import * as sinon from 'sinon';
 import {GitHub} from '../../src/github';
 import {NodeWorkspace} from '../../src/plugins/node-workspace';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {expect} from 'chai';
 import {Version} from '../../src/version';
 import {Update} from '../../src/update';
@@ -34,6 +33,7 @@ import {RawContent} from '../../src/updaters/raw-content';
 import {ManifestPlugin} from '../../src/plugin';
 import {Changelog} from '../../src/updaters/changelog';
 import {ReleasePleaseManifest} from '../../src/updaters/release-please-manifest';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 const sandbox = sinon.createSandbox();
 const fixturesPath = './test/fixtures/plugins/node-workspace';

@@ -13,7 +13,6 @@
 // limitations under the License.
 import {GitHub} from '../../src/github';
 import {Merge} from '../../src/plugins/merge';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {
   buildMockCandidatePullRequest,
   assertHasUpdate,
@@ -21,6 +20,7 @@ import {
 } from '../helpers';
 import {RawContent} from '../../src/updaters/raw-content';
 import {CompositeUpdater} from '../../src/updaters/composite';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 describe('Merge plugin', () => {
   let github: GitHub;

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import {GitHub} from './github';
-import {ReleaserConfig} from './manifest';
 import {PullRequest} from './pull-request';
 import {Version, VersionsMap} from './version';
 import {Update} from './update';
@@ -24,6 +23,7 @@ import {
   DEFAULT_RELEASE_PLEASE_MANIFEST,
   ROOT_PROJECT_PATH,
 } from './constants';
+import {ReleaserConfig} from './types';
 
 interface BootstrapPullRequest extends PullRequest {
   updates: Update[];

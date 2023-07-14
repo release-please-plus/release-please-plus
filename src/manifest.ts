@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ChangelogSection} from './changelog-notes';
 import {GitHub, GitHubRelease, GitHubTag} from './github';
 import {Version, VersionsMap} from './version';
 import {Commit, parseConventionalCommits} from './commit';
@@ -25,10 +24,8 @@ import {BranchName} from './util/branch-name';
 import {PullRequestTitle} from './util/pull-request-title';
 import {ReleasePullRequest} from './release-pull-request';
 import {
-  buildPlugin,
   buildStrategy,
   ChangelogNotesType,
-  ReleaseType,
   VersioningStrategyType,
 } from './factory';
 import {Release} from './release';
@@ -41,13 +38,19 @@ import {
   FileNotFoundError,
 } from './errors';
 import {ManifestPlugin} from './plugin';
-import {
-  FilePullRequestOverflowHandler,
-  PullRequestOverflowHandler,
-} from './util/pull-request-overflow-handler';
+import {FilePullRequestOverflowHandler} from './util/pull-request-overflow-handler';
 import {signoffCommitMessage} from './util/signoff-commit-message';
 import {CommitExclude} from './util/commit-exclude';
-import {ExtraFile} from './types';
+import {
+  CandidateReleasePullRequest,
+  ChangelogSection,
+  ExtraFile,
+  PluginType,
+  PullRequestOverflowHandler,
+  ReleaserConfig,
+  ReleaseType,
+  RepositoryConfig,
+} from './types';
 import {
   DEFAULT_COMMIT_SEARCH_DEPTH,
   DEFAULT_COMPONENT_NAME,
@@ -60,58 +63,7 @@ import {
   ROOT_PROJECT_PATH,
   SNOOZE_LABEL,
 } from './constants';
-
-/**
- * These are configurations provided to each strategy per-path.
- */
-export interface ReleaserConfig {
-  releaseType: ReleaseType;
-
-  // Versioning config
-  versioning?: VersioningStrategyType;
-  bumpMinorPreMajor?: boolean;
-  bumpPatchForMinorPreMajor?: boolean;
-
-  // Strategy options
-  releaseAs?: string;
-  skipGithubRelease?: boolean; // Note this should be renamed to skipGitHubRelease in next major release
-  draft?: boolean;
-  prerelease?: boolean;
-  draftPullRequest?: boolean;
-  component?: string;
-  packageName?: string;
-  includeComponentInTag?: boolean;
-  includeVInTag?: boolean;
-  pullRequestTitlePattern?: string;
-  pullRequestHeader?: string;
-  tagSeparator?: string;
-  separatePullRequests?: boolean;
-  labels?: string[];
-  releaseLabels?: string[];
-  extraLabels?: string[];
-  initialVersion?: string;
-
-  // Changelog options
-  changelogSections?: ChangelogSection[];
-  changelogPath?: string;
-  changelogType?: ChangelogNotesType;
-  changelogHost?: string;
-
-  // Ruby-only
-  versionFile?: string;
-  // Java-only
-  extraFiles?: ExtraFile[];
-  snapshotLabels?: string[];
-  skipSnapshot?: boolean;
-  // Manifest only
-  excludePaths?: string[];
-}
-
-export interface CandidateReleasePullRequest {
-  path: string;
-  pullRequest: ReleasePullRequest;
-  config: ReleaserConfig;
-}
+import {buildPlugin} from './factories/plugin-factory';
 
 export interface CandidateRelease extends Release {
   pullRequest: PullRequest;
@@ -179,34 +131,6 @@ export interface ReleaserPackageConfig extends ReleaserConfigJson {
   'changelog-path'?: string;
 }
 
-export type DirectPluginType = string;
-export interface ConfigurablePluginType {
-  type: string;
-}
-export interface LinkedVersionPluginConfig extends ConfigurablePluginType {
-  type: 'linked-versions';
-  groupName: string;
-  components: string[];
-  merge?: boolean;
-}
-export interface SentenceCasePluginConfig extends ConfigurablePluginType {
-  specialWords?: string[];
-}
-export interface WorkspacePluginConfig extends ConfigurablePluginType {
-  merge?: boolean;
-  considerAllArtifacts?: boolean;
-}
-export interface GroupPriorityPluginConfig extends ConfigurablePluginType {
-  groups: string[];
-}
-export type PluginType =
-  | DirectPluginType
-  | ConfigurablePluginType
-  | GroupPriorityPluginConfig
-  | LinkedVersionPluginConfig
-  | SentenceCasePluginConfig
-  | WorkspacePluginConfig;
-
 /**
  * This is the schema of the manifest config json
  */
@@ -223,8 +147,6 @@ export interface ManifestConfig extends ReleaserConfigJson {
 }
 // path => version
 export type ReleasedVersions = Record<string, Version>;
-// path => config
-export type RepositoryConfig = Record<string, ReleaserConfig>;
 
 interface CreatedRelease extends GitHubRelease {
   id: number;

@@ -15,8 +15,8 @@ import {describe, it, beforeEach} from 'mocha';
 import {expect} from 'chai';
 import {GitHub} from '../../src/github';
 import {GroupPriority} from '../../src/plugins/group-priority';
-import {CandidateReleasePullRequest} from '../../src/manifest';
 import {buildMockCandidatePullRequest} from '../helpers';
+import {CandidateReleasePullRequest} from '../../src/types';
 
 describe('GroupPriority plugin', () => {
   let github: GitHub;

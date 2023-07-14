@@ -14,11 +14,8 @@
 
 import {jsonStringify} from '../util/json-stringify';
 import {Updater} from '../update';
-import {
-  ReleaserConfig,
-  ManifestConfig,
-  ReleaserPackageConfig,
-} from '../manifest';
+import {ManifestConfig, ReleaserPackageConfig} from '../manifest';
+import {ReleaserConfig} from '../types';
 
 const SCHEMA_URL =
   'https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json';

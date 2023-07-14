@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  ChangelogSection,
-  ChangelogNotes,
-  BuildNotesOptions,
-} from '../changelog-notes';
+import {ChangelogNotes, BuildNotesOptions} from '../changelog-notes';
 import {ConventionalCommit} from '../commit';
+import {ChangelogSection} from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const conventionalChangelogWriter = require('conventional-changelog-writer');
