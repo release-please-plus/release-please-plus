@@ -25,65 +25,42 @@ import {BranchName} from './util/branch-name';
 import {PullRequestTitle} from './util/pull-request-title';
 import {ReleasePullRequest} from './release-pull-request';
 import {
+  buildPlugin,
   buildStrategy,
+  ChangelogNotesType,
   ReleaseType,
   VersioningStrategyType,
-  buildPlugin,
-  ChangelogNotesType,
 } from './factory';
 import {Release} from './release';
 import {Strategy} from './strategy';
 import {Merge} from './plugins/merge';
 import {ReleasePleaseManifest} from './updaters/release-please-manifest';
 import {
+  ConfigurationError,
   DuplicateReleaseError,
   FileNotFoundError,
-  ConfigurationError,
 } from './errors';
 import {ManifestPlugin} from './plugin';
 import {
-  PullRequestOverflowHandler,
   FilePullRequestOverflowHandler,
+  PullRequestOverflowHandler,
 } from './util/pull-request-overflow-handler';
 import {signoffCommitMessage} from './util/signoff-commit-message';
 import {CommitExclude} from './util/commit-exclude';
+import {ExtraFile} from './types';
+import {
+  DEFAULT_COMMIT_SEARCH_DEPTH,
+  DEFAULT_COMPONENT_NAME,
+  DEFAULT_LABELS,
+  DEFAULT_RELEASE_LABELS,
+  DEFAULT_RELEASE_PLEASE_CONFIG,
+  DEFAULT_RELEASE_PLEASE_MANIFEST,
+  DEFAULT_RELEASE_SEARCH_DEPTH,
+  DEFAULT_SNAPSHOT_LABELS,
+  ROOT_PROJECT_PATH,
+  SNOOZE_LABEL,
+} from './constants';
 
-type ExtraJsonFile = {
-  type: 'json';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-type ExtraYamlFile = {
-  type: 'yaml';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-type ExtraXmlFile = {
-  type: 'xml';
-  path: string;
-  xpath: string;
-  glob?: boolean;
-};
-type ExtraPomFile = {
-  type: 'pom';
-  path: string;
-  glob?: boolean;
-};
-type ExtraTomlFile = {
-  type: 'toml';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-export type ExtraFile =
-  | string
-  | ExtraJsonFile
-  | ExtraYamlFile
-  | ExtraXmlFile
-  | ExtraPomFile
-  | ExtraTomlFile;
 /**
  * These are configurations provided to each strategy per-path.
  */
@@ -248,19 +225,6 @@ export interface ManifestConfig extends ReleaserConfigJson {
 export type ReleasedVersions = Record<string, Version>;
 // path => config
 export type RepositoryConfig = Record<string, ReleaserConfig>;
-
-export const DEFAULT_RELEASE_PLEASE_CONFIG = 'release-please-config.json';
-export const DEFAULT_RELEASE_PLEASE_MANIFEST = '.release-please-manifest.json';
-export const ROOT_PROJECT_PATH = '.';
-export const DEFAULT_COMPONENT_NAME = '';
-export const DEFAULT_LABELS = ['autorelease: pending'];
-export const DEFAULT_RELEASE_LABELS = ['autorelease: tagged'];
-export const DEFAULT_SNAPSHOT_LABELS = ['autorelease: snapshot'];
-export const SNOOZE_LABEL = 'autorelease: snooze';
-const DEFAULT_RELEASE_SEARCH_DEPTH = 400;
-const DEFAULT_COMMIT_SEARCH_DEPTH = 500;
-
-export const MANIFEST_PULL_REQUEST_TITLE_PATTERN = 'chore: release ${branch}';
 
 interface CreatedRelease extends GitHubRelease {
   id: number;

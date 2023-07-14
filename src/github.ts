@@ -38,7 +38,6 @@ import {Repository} from './repository';
 import {ReleasePullRequest} from './release-pull-request';
 import {Update} from './update';
 import {Release} from './release';
-import {ROOT_PROJECT_PATH} from './manifest';
 import {signoffCommitMessage} from './util/signoff-commit-message';
 import {
   RepositoryFileCache,
@@ -50,6 +49,7 @@ import {Logger} from 'code-suggester/build/src/types';
 import {HttpsProxyAgent} from 'https-proxy-agent';
 import {HttpProxyAgent} from 'http-proxy-agent';
 import {PullRequestOverflowHandler} from './util/pull-request-overflow-handler';
+import {ROOT_PROJECT_PATH} from './constants';
 
 // Extract some types from the `request` package.
 type RequestBuilderType = typeof request;

@@ -13,17 +13,17 @@
 // limitations under the License.
 
 import {GitHub} from './github';
-import {
-  DEFAULT_RELEASE_PLEASE_MANIFEST,
-  DEFAULT_RELEASE_PLEASE_CONFIG,
-  ReleaserConfig,
-  ROOT_PROJECT_PATH,
-} from './manifest';
+import {ReleaserConfig} from './manifest';
 import {PullRequest} from './pull-request';
 import {Version, VersionsMap} from './version';
 import {Update} from './update';
 import {ReleasePleaseManifest} from './updaters/release-please-manifest';
 import {ReleasePleaseConfig} from './updaters/release-please-config';
+import {
+  DEFAULT_RELEASE_PLEASE_CONFIG,
+  DEFAULT_RELEASE_PLEASE_MANIFEST,
+  ROOT_PROJECT_PATH,
+} from './constants';
 
 interface BootstrapPullRequest extends PullRequest {
   updates: Update[];

@@ -13,17 +13,13 @@
 // limitations under the License.
 
 import {ManifestPlugin} from '../plugin';
-import {
-  CandidateReleasePullRequest,
-  RepositoryConfig,
-  DEFAULT_RELEASE_PLEASE_MANIFEST,
-  ROOT_PROJECT_PATH,
-} from '../manifest';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../manifest';
 import {logger as defaultLogger, Logger} from '../util/logger';
 import {VersionsMap, Version} from '../version';
 import {Merge} from './merge';
 import {GitHub} from '../github';
 import {ReleasePleaseManifest} from '../updaters/release-please-manifest';
+import {DEFAULT_RELEASE_PLEASE_MANIFEST, ROOT_PROJECT_PATH} from '../constants';
 
 export type DependencyGraph<T> = Map<string, DependencyNode<T>>;
 export interface DependencyNode<T> {

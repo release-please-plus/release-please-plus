@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import {Commit} from '../commit';
-import {ROOT_PROJECT_PATH} from '../manifest';
 import {normalizePaths} from './commit-utils';
+import {ROOT_PROJECT_PATH} from '../constants';
 
 export interface CommitSplitOptions {
   // Include empty git commits: each empty commit is included

@@ -17,7 +17,7 @@
 import {coerceOption} from '../util/coerce-option';
 import * as yargs from 'yargs';
 import {GitHub, GH_API_URL, GH_GRAPHQL_URL} from '../github';
-import {Manifest, ManifestOptions, ROOT_PROJECT_PATH} from '../manifest';
+import {Manifest, ManifestOptions} from '../manifest';
 import {ChangelogSection, buildChangelogSections} from '../changelog-notes';
 import {logger, setLogger, CheckpointLogger} from '../util/logger';
 import {
@@ -30,6 +30,7 @@ import {
 } from '../factory';
 import {Bootstrapper} from '../bootstrapper';
 import {createPatch} from 'diff';
+import {ROOT_PROJECT_PATH} from '../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const parseGithubRepoUrl = require('parse-github-repo-url');

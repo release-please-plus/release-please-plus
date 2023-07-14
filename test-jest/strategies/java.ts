@@ -24,9 +24,9 @@ import {
 import {Version} from '../../src/version';
 import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
-import {DEFAULT_LABELS, DEFAULT_SNAPSHOT_LABELS} from '../../src/manifest';
 import {Generic} from '../../src/updaters/generic';
 import {JavaReleased} from '../../src/updaters/java/java-released';
+import {DEFAULT_LABELS, DEFAULT_SNAPSHOT_LABELS} from '../../src/constants';
 
 describe('Java', () => {
   let github: GitHub;

@@ -19,7 +19,8 @@ import {
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Version} from '../../src/version';
-import {MANIFEST_PULL_REQUEST_TITLE_PATTERN} from '../../src/manifest';
+
+import {MANIFEST_PULL_REQUEST_TITLE_PATTERN} from '../../src/constants';
 
 describe('PullRequestTitle', () => {
   describe('parse', () => {

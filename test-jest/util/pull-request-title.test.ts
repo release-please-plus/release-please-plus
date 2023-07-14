@@ -17,7 +17,8 @@ import {
   PullRequestTitle,
 } from '../../src/util/pull-request-title';
 import {Version} from '../../src/version';
-import {MANIFEST_PULL_REQUEST_TITLE_PATTERN} from '../../src/manifest';
+
+import {MANIFEST_PULL_REQUEST_TITLE_PATTERN} from '../../src/constants';
 
 describe('PullRequestTitle', () => {
   describe('parse', () => {

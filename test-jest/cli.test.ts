@@ -13,14 +13,14 @@
 // limitations under the License.
 
 import {parser, handleError} from '../src/bin/release-please';
-import {
-  Manifest,
-  DEFAULT_RELEASE_PLEASE_CONFIG,
-  DEFAULT_RELEASE_PLEASE_MANIFEST,
-} from '../src/manifest';
+import {Manifest} from '../src/manifest';
 import {GitHub} from '../src/github';
 import {ParseCallback} from 'yargs';
 import 'jest-extended';
+import {
+  DEFAULT_RELEASE_PLEASE_CONFIG,
+  DEFAULT_RELEASE_PLEASE_MANIFEST,
+} from '../src/constants';
 
 // function callStub(
 //   instance: Manifest,

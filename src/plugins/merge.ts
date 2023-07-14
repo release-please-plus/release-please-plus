@@ -13,18 +13,17 @@
 // limitations under the License.
 
 import {ManifestPlugin} from '../plugin';
-import {
-  CandidateReleasePullRequest,
-  RepositoryConfig,
-  MANIFEST_PULL_REQUEST_TITLE_PATTERN,
-  ROOT_PROJECT_PATH,
-} from '../manifest';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../manifest';
 import {PullRequestTitle} from '../util/pull-request-title';
 import {PullRequestBody, ReleaseData} from '../util/pull-request-body';
 import {BranchName} from '../util/branch-name';
 import {Update} from '../update';
 import {mergeUpdates} from '../updaters/composite';
 import {GitHub} from '../github';
+import {
+  MANIFEST_PULL_REQUEST_TITLE_PATTERN,
+  ROOT_PROJECT_PATH,
+} from '../constants';
 
 interface MergeOptions {
   pullRequestTitlePattern?: string;
