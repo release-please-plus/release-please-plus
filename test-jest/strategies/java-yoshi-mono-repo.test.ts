@@ -29,6 +29,10 @@ import {VersionsManifest} from '../../src/updaters/java/versions-manifest';
 import {CompositeUpdater} from '../../src/updaters/composite';
 import {when} from 'jest-when';
 
+import nock from 'nock';
+import {FileNotFoundError} from '../../src/errors';
+nock.disableNetConnect();
+
 const fixturesPath = './test/fixtures/strategies/java-yoshi';
 
 const COMMITS = [
@@ -68,7 +72,9 @@ describe('JavaYoshiMonoRepo', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -89,7 +95,9 @@ describe('JavaYoshiMonoRepo', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -144,7 +152,9 @@ describe('JavaYoshiMonoRepo', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -185,7 +195,9 @@ describe('JavaYoshiMonoRepo', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -207,7 +219,9 @@ describe('JavaYoshiMonoRepo', () => {
         github,
         component: 'google-cloud-automl',
       });
-      const findFilesStub = jest.spyOn(github, 'findFilesByFilenameAndRef');
+      const findFilesStub = jest
+        .spyOn(github, 'findFilesByFilenameAndRef')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(findFilesStub)
         .calledWith('pom.xml', 'main', '.')
         .mockResolvedValue(['path1/pom.xml', 'path2/pom.xml']);
@@ -220,7 +234,9 @@ describe('JavaYoshiMonoRepo', () => {
       when(findFilesStub)
         .calledWith('README.md', 'main', '.')
         .mockResolvedValue(['path1/README.md', 'path2/README.md']);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -256,7 +272,9 @@ describe('JavaYoshiMonoRepo', () => {
         extraFiles: ['foo/bar.java', 'src/version.java'],
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(
@@ -280,7 +298,10 @@ describe('JavaYoshiMonoRepo', () => {
         github,
         component: 'google-cloud-automl',
       });
-      const findFilesStub = jest.spyOn(github, 'findFilesByFilenameAndRef');
+      const findFilesStub = jest
+        .spyOn(github, 'findFilesByFilenameAndRef')
+        .mockRejectedValue(new FileNotFoundError(''));
+
       when(findFilesStub)
         .calledWith('pom.xml', 'main', '.')
         .mockResolvedValue(['path1/pom.xml', 'path2/pom.xml']);
@@ -448,7 +469,9 @@ describe('JavaYoshiMonoRepo', () => {
         component: 'google-cloud-automl',
       });
       jest.spyOn(github, 'findFilesByFilenameAndRef').mockResolvedValue([]);
-      const getFileContentsStub = jest.spyOn(github, 'getFileContentsOnBranch');
+      const getFileContentsStub = jest
+        .spyOn(github, 'getFileContentsOnBranch')
+        .mockRejectedValue(new FileNotFoundError(''));
       when(getFileContentsStub)
         .calledWith('versions.txt', 'main')
         .mockResolvedValue(

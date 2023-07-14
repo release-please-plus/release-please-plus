@@ -946,6 +946,7 @@ export class GitHub {
     path: string,
     branch: string
   ): Promise<GitHubFileContents> {
+    console.debug(`Fetching ${path} from branch ${branch}`);
     this.logger.debug(`Fetching ${path} from branch ${branch}`);
     try {
       return await this.fileCache.getFileContents(path, branch);

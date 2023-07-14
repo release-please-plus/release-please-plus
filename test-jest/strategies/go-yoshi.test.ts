@@ -134,8 +134,8 @@ describe('GoYoshi', () => {
       ];
       const pullRequest = await strategy.buildReleasePullRequest(commits);
       const pullRequestBody = pullRequest!.body.toString();
-      expect(pullRequestBody).toEqual(expect.not.arrayContaining(['access']));
-      expect(pullRequestBody).toEqual(expect.arrayContaining(['iam']));
+      expect(pullRequestBody).not.toInclude('access');
+      expect(pullRequestBody).toInclude('iam');
       expect(dateSafe(pullRequestBody)).toMatchSnapshot();
     });
 

@@ -27,6 +27,10 @@ import {PomXml} from '../../src/updaters/java/pom-xml';
 import {TagName} from '../../src/util/tag-name';
 import {Version} from '../../src/version';
 import {when} from 'jest-when';
+import {FileNotFoundError} from '../../src/errors';
+import nock from 'nock';
+
+nock.disableNetConnect();
 
 const COMMITS = [
   ...buildMockConventionalCommit('fix(deps): update dependency'),
@@ -53,7 +57,10 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+      const spy = jest
+        .spyOn(github, 'findFilesByFilenameAndRef')
+        .mockRejectedValue(new FileNotFoundError(''));
+      when(spy)
         .calledWith('pom.xml', 'main')
         .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 
@@ -84,7 +91,10 @@ describe('Maven', () => {
         extraFiles: ['foo/bar.java'],
       });
 
-      when(jest.spyOn(github, 'findFilesByFilenameAndRef'))
+      const spy = jest
+        .spyOn(github, 'findFilesByFilenameAndRef')
+        .mockResolvedValue([]);
+      when(spy)
         .calledWith('pom.xml', 'main')
         .mockResolvedValue(['pom.xml', 'submodule/pom.xml']);
 

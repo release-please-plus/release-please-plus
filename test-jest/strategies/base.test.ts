@@ -191,9 +191,9 @@ describe('Strategy', () => {
       assertHasUpdate(updates!, '3.xml', PomXml);
     });
     it('updates extra glob files', async () => {
-      const findFilesStub = when(
-        jest.spyOn(github, 'findFilesByGlobAndRef')
-      ).mockResolvedValue(['3.xml']);
+      const findFilesStub = jest
+        .spyOn(github, 'findFilesByGlobAndRef')
+        .mockResolvedValue(['3.xml']);
       const strategy = new TestStrategy({
         targetBranch: 'main',
         github,
