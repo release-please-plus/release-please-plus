@@ -4,13 +4,13 @@
 // This resolves tests in the merged build output to the snapshot in their
 // source tree. This ensures we update the correct snapshot.
 exports.createSnapshotResolver = (
-  sourcePath,
-  rootPath,
+  sourcePath: string,
+  rootPath: string,
   includeSnapExtension = false
 ) => {
   const path = require('path');
   return {
-    resolveSnapshotPath: (testPath, snapshotExtension) => {
+    resolveSnapshotPath: (testPath: string, snapshotExtension: string) => {
       const testDir = path.dirname(testPath);
 
       let testSrcDir = testDir;
@@ -26,7 +26,7 @@ exports.createSnapshotResolver = (
       );
     },
 
-    resolveTestPath: (snapshotFilePath, snapshotExtension) => {
+    resolveTestPath: (snapshotFilePath: string, snapshotExtension: string) => {
       let relative = snapshotFilePath
         .replace(rootPath + path.sep, '')
         .replace('__snapshots__' + path.sep, '');

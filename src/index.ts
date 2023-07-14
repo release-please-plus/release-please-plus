@@ -45,5 +45,5 @@ export {ReleaseType} from './types';
 export {VersioningStrategyType} from './types';
 export {ChangelogSection} from './types';
 export {PluginType} from './types';
-export const configSchema = require('../schemas/config.json');
-export const manifestSchema = require('../schemas/manifest.json');
+export const configSchema = require('../../schemas/config.json');
+export const manifestSchema = require('../../schemas/manifest.json');

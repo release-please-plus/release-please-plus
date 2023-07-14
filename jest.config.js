@@ -3,7 +3,8 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -23,7 +24,7 @@ export default {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: 'coverage',
+  coverageDirectory: '../../.coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -31,7 +32,7 @@ export default {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: 'v8',
+  coverageProvider: 'babel',
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -94,7 +95,7 @@ export default {
 
   // A preset that is used as a base for Jest's configuration
   // preset: undefined,
-  preset: 'ts-jest',
+  // preset: 'ts-jest',
   testEnvironment: 'node',
 
   // Run tests from one or more projects
@@ -116,7 +117,7 @@ export default {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: undefined,
+  rootDir: './build/test',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -140,12 +141,7 @@ export default {
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
 
-  // go ahead and make snapshots compatible with v9
-  snapshotFormat: {
-    escapeString: false,
-    printBasicPrototype: false,
-  },
-
+  snapshotResolver: '<rootDir>/_setup/_rootedSnapshotResolver.js',
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
 

@@ -7,4 +7,4 @@ module.exports = createSnapshotResolver.createSnapshotResolver(
 );
 
 // jest config
-//     snapshotResolver: '<rootDir>/test/_setup/_myResolver.js'
+//     snapshotResolver: '<rootDir>/_setup/_rootedSnapshotResolver.js'

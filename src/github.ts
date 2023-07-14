@@ -155,16 +155,16 @@ interface ReleaseHistory {
   data: GitHubRelease[];
 }
 
-interface CommitIteratorOptions {
+export interface CommitIteratorOptions {
   maxResults?: number;
   backfillFiles?: boolean;
 }
 
-interface ReleaseIteratorOptions {
+export interface ReleaseIteratorOptions {
   maxResults?: number;
 }
 
-interface TagIteratorOptions {
+export interface TagIteratorOptions {
   maxResults?: number;
 }
 
@@ -253,7 +253,7 @@ export class GitHub {
   static async create(options: GitHubCreateOptions): Promise<GitHub> {
     const apiUrl = options.apiUrl ?? GH_API_URL;
     const graphqlUrl = options.graphqlUrl ?? GH_GRAPHQL_URL;
-    const releasePleaseVersion = require('../package.json').version;
+    const releasePleaseVersion = require('../../package.json').version;
     const apis = options.octokitAPIs ?? {
       octokit: new Octokit({
         baseUrl: apiUrl,
