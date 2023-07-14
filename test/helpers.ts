@@ -15,8 +15,8 @@
 import {readFileSync, readdirSync, statSync} from 'fs';
 import {resolve, posix} from 'path';
 import * as crypto from 'crypto';
-import * as sinon from 'sinon';
 import * as suggester from 'code-suggester';
+import {when} from 'jest-when';
 import {CreatePullRequestUserOptions} from 'code-suggester/build/src/types';
 import {Octokit} from '@octokit/rest';
 import {
@@ -26,48 +26,41 @@ import {
 } from '../src/commit';
 import {GitHub, GitHubTag, GitHubRelease} from '../src/github';
 import {Update} from '../src/update';
-import {expect} from 'chai';
-import {CandidateReleasePullRequest} from '../src/manifest';
 import {Version} from '../src/version';
 import {PullRequestTitle} from '../src/util/pull-request-title';
 import {PullRequestBody, ReleaseData} from '../src/util/pull-request-body';
 import {BranchName} from '../src/util/branch-name';
-import {ReleaseType} from '../src/factory';
 import {
   GitHubFileContents,
   DEFAULT_FILE_MODE,
 } from '@google-automations/git-file-utils';
 import {CompositeUpdater} from '../src/updaters/composite';
-import {PullRequestOverflowHandler} from '../src/util/pull-request-overflow-handler';
 import {ReleasePullRequest} from '../src/release-pull-request';
 import {PullRequest} from '../src/pull-request';
+import {
+  CandidateReleasePullRequest,
+  PullRequestOverflowHandler,
+  ReleaseType,
+} from '../src/types';
 
-export function stubSuggesterWithSnapshot(
-  sandbox: sinon.SinonSandbox,
-  _snapName: string
-) {
-  sandbox.replace(
-    suggester,
-    'createPullRequest',
-    (
-      _octokit: Octokit,
-      changes: suggester.Changes | null | undefined,
-      options: CreatePullRequestUserOptions
-    ): Promise<number> => {
-      console.log('in stub');
-      console.log(stringifyExpectedChanges([...changes!]));
-      // @ts-expect-error no types for snapshot
-      expect(stringifyExpectedChanges([...changes!])).to.matchSnapshot();
-      // @ts-expect-error no types for snapshot
-      expect(stringifyExpectedOptions(options)).to.matchSnapshot();
-      return Promise.resolve(22);
-    }
-  );
+export function stubSuggesterWithSnapshot() {
+  jest
+    .spyOn(suggester, 'createPullRequest')
+    .mockImplementation(
+      (
+        _octokit: Octokit,
+        changes: suggester.Changes | null | undefined,
+        options: CreatePullRequestUserOptions
+      ): Promise<number> => {
+        expect(stringifyExpectedChanges([...changes!])).toMatchSnapshot();
+        expect(stringifyExpectedOptions(options)).toMatchSnapshot();
+        return Promise.resolve(22);
+      }
+    );
 }
 
 export function safeSnapshot(content: string) {
-  // @ts-expect-error no types for snapshot
-  expect(dateSafe(newLine(content))).to.matchSnapshot();
+  expect(dateSafe(newLine(content))).toMatchSnapshot();
 }
 
 export function dateSafe(content: string): string {
@@ -167,7 +160,6 @@ export function buildGitHubFileRaw(content: string): GitHubFileContents {
 }
 
 export interface StubFiles {
-  sandbox: sinon.SinonSandbox;
   github: GitHub;
 
   // "master" TODO update all test code to use "main"
@@ -204,7 +196,7 @@ export interface StubFiles {
 }
 
 export function stubFilesFromFixtures(options: StubFiles) {
-  const {fixturePath, sandbox, github, files} = options;
+  const {fixturePath, github, files} = options;
   const inlineFiles = options.inlineFiles ?? [];
   const overlap = inlineFiles.filter(f => files.includes(f[0]));
   if (overlap.length > 0) {
@@ -214,21 +206,26 @@ export function stubFilesFromFixtures(options: StubFiles) {
   }
   const targetBranch = options.targetBranch ?? 'master';
   const flatten = options.flatten ?? true;
-  const stub = sandbox.stub(github, 'getFileContentsOnBranch');
+  const stub = jest.spyOn(github, 'getFileContentsOnBranch');
   for (const file of files) {
     let fixtureFile = file;
     if (flatten) {
       const parts = file.split('/');
       fixtureFile = parts[parts.length - 1];
     }
-    stub
-      .withArgs(file, targetBranch)
-      .resolves(buildGitHubFileContent(fixturePath, fixtureFile));
+    when(stub)
+      .calledWith(file, targetBranch)
+      .mockResolvedValue(buildGitHubFileContent(fixturePath, fixtureFile));
   }
   for (const [file, content] of inlineFiles) {
-    stub.withArgs(file, targetBranch).resolves(buildGitHubFileRaw(content));
+    when(stub)
+      .calledWith(file, targetBranch)
+      .mockResolvedValue(buildGitHubFileRaw(content));
   }
-  stub.rejects(Object.assign(Error('not found'), {status: 404}));
+
+  // when(stub).mockRejectedValue(
+  //   Object.assign(Error('not found'), {status: 404})
+  // );
 }
 
 // get list of files in a directory
@@ -265,12 +262,10 @@ export function assertHasUpdate(
   const found = updates.find(update => {
     return update.path === path;
   });
-  expect(found, `update for ${path}`).to.not.be.undefined;
+  // update for ${path}
+  expect(found).toBeDefined();
   if (clazz) {
-    expect(found?.updater).instanceof(
-      clazz,
-      `expected update to be of class ${clazz}`
-    );
+    expect(found?.updater).toBeInstanceOf(clazz);
   }
   return found!;
 }
@@ -286,15 +281,9 @@ export function assertHasUpdates(
 
   const composite = assertHasUpdate(updates, path, CompositeUpdater)
     .updater as CompositeUpdater;
-  expect(composite.updaters).to.be.lengthOf(
-    clazz.length,
-    `expected to find exactly ${clazz.length} updaters`
-  );
+  expect(composite.updaters).toHaveLength(clazz.length);
   for (let i = 0; i < clazz.length; i++) {
-    expect(composite.updaters[i]).to.be.instanceof(
-      clazz[i],
-      `expected updaters[${i}] to be of class ${clazz[i]}`
-    );
+    expect(composite.updaters[i]).toBeInstanceOf(clazz[i]);
   }
   return composite;
 }
@@ -303,7 +292,8 @@ export function assertNoHasUpdate(updates: Update[], path: string) {
   const found = updates.find(update => {
     return update.path === path;
   });
-  expect(found, `update for ${path}`).to.be.undefined;
+  // update for ${path}
+  expect(found).toBeUndefined();
 }
 
 export function loadCommitFixtures(name: string): Commit[] {
@@ -363,56 +353,44 @@ export function buildMockCandidatePullRequest(
   };
 }
 
-export function mockCommits(
-  sandbox: sinon.SinonSandbox,
-  github: GitHub,
-  commits: Commit[]
-): sinon.SinonStub {
+export function mockCommits(github: GitHub, commits: Commit[]) {
   async function* fakeGenerator() {
     for (const commit of commits) {
       yield commit;
     }
   }
-  return sandbox.stub(github, 'mergeCommitIterator').returns(fakeGenerator());
+  return jest
+    .spyOn(github, 'mergeCommitIterator')
+    .mockReturnValue(fakeGenerator());
 }
 
-export function mockReleases(
-  sandbox: sinon.SinonSandbox,
-  github: GitHub,
-  releases: GitHubRelease[]
-): sinon.SinonStub {
+export function mockReleases(github: GitHub, releases: GitHubRelease[]) {
   async function* fakeGenerator() {
     for (const release of releases) {
       yield release;
     }
   }
-  return sandbox.stub(github, 'releaseIterator').returns(fakeGenerator());
+  return jest.spyOn(github, 'releaseIterator').mockReturnValue(fakeGenerator());
 }
 
-export function mockTags(
-  sandbox: sinon.SinonSandbox,
-  github: GitHub,
-  tags: GitHubTag[]
-): sinon.SinonStub {
+export function mockTags(github: GitHub, tags: GitHubTag[]) {
   async function* fakeGenerator() {
     for (const tag of tags) {
       yield tag;
     }
   }
-  return sandbox.stub(github, 'tagIterator').returns(fakeGenerator());
+  return jest.spyOn(github, 'tagIterator').mockReturnValue(fakeGenerator());
 }
 
-export function mockPullRequests(
-  sandbox: sinon.SinonSandbox,
-  github: GitHub,
-  pullRequests: PullRequest[]
-): sinon.SinonStub {
+export function mockPullRequests(github: GitHub, pullRequests: PullRequest[]) {
   async function* fakeGenerator() {
     for (const pullRequest of pullRequests) {
       yield pullRequest;
     }
   }
-  return sandbox.stub(github, 'pullRequestIterator').returns(fakeGenerator());
+  return jest
+    .spyOn(github, 'pullRequestIterator')
+    .mockReturnValue(fakeGenerator());
 }
 
 export function mockReleaseData(count: number): ReleaseData[] {

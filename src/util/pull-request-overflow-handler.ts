@@ -18,6 +18,7 @@ import {PullRequest} from '../pull-request';
 import {Logger, logger as defaultLogger} from './logger';
 import {URL} from 'url';
 import {ReleasePullRequest} from '../release-pull-request';
+import {PullRequestOverflowHandler} from '../types';
 
 const MAX_ISSUE_BODY_SIZE = 65536;
 const OVERFLOW_MESSAGE =
@@ -27,32 +28,6 @@ const RELEASE_NOTES_FILENAME = 'release-notes.md';
 const FILE_PATH_REGEX = new RegExp(
   `blob/(?<branchName>.*)/${RELEASE_NOTES_FILENAME}`
 );
-
-/**
- * Interface for managing the pull request body contents when the content
- * is too large to fit into a pull request.
- */
-export interface PullRequestOverflowHandler {
-  /**
-   * If a pull request's body is too big, store it somewhere and return
-   * a new pull request body with information about the new location.
-   * @param {ReleasePullRequest} pullRequest The candidate release pull request
-   * @returns {string} The new pull request body which may contain a link to
-   *   the full content.
-   */
-  handleOverflow(
-    pullRequest: ReleasePullRequest,
-    maxSize?: number
-  ): Promise<string>;
-
-  /**
-   * Given a pull request, parse the pull request body from the pull request
-   * or storage if the body was too big to store in the pull request body.
-   * @param {PullRequest} pullRequest The pull request from GitHub
-   * @return {PullRequestBody} The parsed pull request body
-   */
-  parseOverflow(pullRequest: PullRequest): Promise<PullRequestBody | undefined>;
-}
 
 /**
  * This implementation of PullRequestOverflowHandler stores the full release

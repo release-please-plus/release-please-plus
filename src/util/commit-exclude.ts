@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import {Commit} from '../commit';
-import {ReleaserConfig, ROOT_PROJECT_PATH} from '../manifest';
 import {normalizePaths} from './commit-utils';
+import {ROOT_PROJECT_PATH} from '../constants';
+import {ReleaserConfig} from '../types';
 
 export type CommitExcludeConfig = Pick<ReleaserConfig, 'excludePaths'>;
 

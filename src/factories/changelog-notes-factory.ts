@@ -13,12 +13,11 @@
 // limitations under the License.
 
 import {GitHub} from '../github';
-import {ChangelogNotes, ChangelogSection} from '../changelog-notes';
+import {ChangelogNotes} from '../changelog-notes';
 import {GitHubChangelogNotes} from '../changelog-notes/github';
 import {DefaultChangelogNotes} from '../changelog-notes/default';
 import {ConfigurationError} from '../errors';
-
-export type ChangelogNotesType = string;
+import {ChangelogNotesType, ChangelogSection} from '../types';
 
 export interface ChangelogNotesFactoryOptions {
   type: ChangelogNotesType;

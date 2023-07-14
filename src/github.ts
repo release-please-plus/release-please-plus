@@ -38,7 +38,6 @@ import {Repository} from './repository';
 import {ReleasePullRequest} from './release-pull-request';
 import {Update} from './update';
 import {Release} from './release';
-import {ROOT_PROJECT_PATH} from './manifest';
 import {signoffCommitMessage} from './util/signoff-commit-message';
 import {
   RepositoryFileCache,
@@ -49,7 +48,8 @@ import {
 import {Logger} from 'code-suggester/build/src/types';
 import {HttpsProxyAgent} from 'https-proxy-agent';
 import {HttpProxyAgent} from 'http-proxy-agent';
-import {PullRequestOverflowHandler} from './util/pull-request-overflow-handler';
+import {ROOT_PROJECT_PATH} from './constants';
+import {PullRequestOverflowHandler} from './types';
 
 // Extract some types from the `request` package.
 type RequestBuilderType = typeof request;
@@ -155,16 +155,16 @@ interface ReleaseHistory {
   data: GitHubRelease[];
 }
 
-interface CommitIteratorOptions {
+export interface CommitIteratorOptions {
   maxResults?: number;
   backfillFiles?: boolean;
 }
 
-interface ReleaseIteratorOptions {
+export interface ReleaseIteratorOptions {
   maxResults?: number;
 }
 
-interface TagIteratorOptions {
+export interface TagIteratorOptions {
   maxResults?: number;
 }
 
@@ -946,6 +946,7 @@ export class GitHub {
     path: string,
     branch: string
   ): Promise<GitHubFileContents> {
+    console.debug(`Fetching ${path} from branch ${branch}`);
     this.logger.debug(`Fetching ${path} from branch ${branch}`);
     try {
       return await this.fileCache.getFileContents(path, branch);

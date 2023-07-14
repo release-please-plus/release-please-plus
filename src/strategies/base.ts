@@ -16,12 +16,7 @@ import {Strategy, BuildReleaseOptions} from '../strategy';
 import {GitHub} from '../github';
 import {VersioningStrategy} from '../versioning-strategy';
 import {Repository} from '../repository';
-import {ChangelogNotes, ChangelogSection} from '../changelog-notes';
-import {
-  ROOT_PROJECT_PATH,
-  MANIFEST_PULL_REQUEST_TITLE_PATTERN,
-  ExtraFile,
-} from '../manifest';
+import {ChangelogNotes} from '../changelog-notes';
 import {DefaultVersioningStrategy} from '../versioning-strategies/default';
 import {DefaultChangelogNotes} from '../changelog-notes/default';
 import {Update} from '../update';
@@ -42,6 +37,11 @@ import {GenericXml} from '../updaters/generic-xml';
 import {PomXml} from '../updaters/java/pom-xml';
 import {GenericYaml} from '../updaters/generic-yaml';
 import {GenericToml} from '../updaters/generic-toml';
+import {ChangelogSection, ExtraFile} from '../types';
+import {
+  MANIFEST_PULL_REQUEST_TITLE_PATTERN,
+  ROOT_PROJECT_PATH,
+} from '../constants';
 
 const DEFAULT_CHANGELOG_PATH = 'CHANGELOG.md';
 

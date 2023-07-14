@@ -34,7 +34,6 @@ import {Dart} from './strategies/dart';
 import {Node} from './strategies/node';
 import {Expo} from './strategies/expo';
 import {GitHub} from './github';
-import {ReleaserConfig} from './manifest';
 import {AlwaysBumpPatch} from './versioning-strategies/always-bump-patch';
 import {ServicePackVersioningStrategy} from './versioning-strategies/service-pack';
 import {DependencyManifest} from './versioning-strategies/dependency-manifest';
@@ -45,17 +44,17 @@ import {Maven} from './strategies/maven';
 import {buildVersioningStrategy} from './factories/versioning-strategy-factory';
 import {buildChangelogNotes} from './factories/changelog-notes-factory';
 import {ConfigurationError} from './errors';
+import {ReleaserConfig, ReleaseType} from './types';
 
-export * from './factories/changelog-notes-factory';
-export * from './factories/plugin-factory';
-export * from './factories/versioning-strategy-factory';
+// export * from './factories/changelog-notes-factory';
+// export * from './factories/plugin-factory';
+// export * from './factories/versioning-strategy-factory';
 
 // Factory shared by GitHub Action and CLI for creating Release PRs
 // and GitHub Releases:
 // add any new releasers you create to this type as well as the `releasers`
 // object below.
 
-export type ReleaseType = string;
 export type ReleaseBuilder = (options: BaseStrategyOptions) => Strategy;
 
 export interface StrategyFactoryOptions extends ReleaserConfig {
@@ -158,3 +157,5 @@ export function unregisterReleaseType(name: string) {
 export function getReleaserTypes(): readonly ReleaseType[] {
   return Object.keys(releasers).sort();
 }
+export {ChangelogNotesType} from './types';
+export {VersioningStrategyType} from './types';

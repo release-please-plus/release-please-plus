@@ -14,8 +14,8 @@
 
 import {ManifestPlugin} from '../plugin';
 import {GitHub} from '../github';
-import {RepositoryConfig} from '../manifest';
 import {ConventionalCommit} from '../commit';
+import {RepositoryConfig} from '../types';
 
 // A list of words that should not be converted to uppercase:
 const SPECIAL_WORDS = ['gRPC', 'npm'];

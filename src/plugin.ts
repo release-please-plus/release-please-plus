@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import {GitHub} from './github';
-import {CandidateReleasePullRequest, RepositoryConfig} from './manifest';
 import {Strategy} from './strategy';
 import {Commit, ConventionalCommit} from './commit';
 import {Release} from './release';
 import {logger as defaultLogger, Logger} from './util/logger';
+import {CandidateReleasePullRequest, RepositoryConfig} from './types';
 
 /**
  * A plugin runs after a repository manifest has built candidate

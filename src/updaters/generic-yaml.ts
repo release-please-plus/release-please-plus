@@ -14,8 +14,8 @@
 
 import {Updater} from '../update';
 import {Version} from '../version';
-import * as jp from 'jsonpath';
-import * as yaml from 'js-yaml';
+import jp from 'jsonpath';
+import yaml from 'js-yaml';
 import {logger as defaultLogger, Logger} from '../util/logger';
 
 const DOCUMENT_SEPARATOR = '---\n';

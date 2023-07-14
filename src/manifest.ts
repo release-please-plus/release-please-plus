@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ChangelogSection} from './changelog-notes';
 import {GitHub, GitHubRelease, GitHubTag} from './github';
 import {Version, VersionsMap} from './version';
 import {Commit, parseConventionalCommits} from './commit';
@@ -26,115 +25,45 @@ import {PullRequestTitle} from './util/pull-request-title';
 import {ReleasePullRequest} from './release-pull-request';
 import {
   buildStrategy,
-  ReleaseType,
-  VersioningStrategyType,
-  buildPlugin,
   ChangelogNotesType,
+  VersioningStrategyType,
 } from './factory';
 import {Release} from './release';
 import {Strategy} from './strategy';
 import {Merge} from './plugins/merge';
 import {ReleasePleaseManifest} from './updaters/release-please-manifest';
 import {
+  ConfigurationError,
   DuplicateReleaseError,
   FileNotFoundError,
-  ConfigurationError,
 } from './errors';
 import {ManifestPlugin} from './plugin';
-import {
-  PullRequestOverflowHandler,
-  FilePullRequestOverflowHandler,
-} from './util/pull-request-overflow-handler';
+import {FilePullRequestOverflowHandler} from './util/pull-request-overflow-handler';
 import {signoffCommitMessage} from './util/signoff-commit-message';
 import {CommitExclude} from './util/commit-exclude';
-
-type ExtraJsonFile = {
-  type: 'json';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-type ExtraYamlFile = {
-  type: 'yaml';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-type ExtraXmlFile = {
-  type: 'xml';
-  path: string;
-  xpath: string;
-  glob?: boolean;
-};
-type ExtraPomFile = {
-  type: 'pom';
-  path: string;
-  glob?: boolean;
-};
-type ExtraTomlFile = {
-  type: 'toml';
-  path: string;
-  jsonpath: string;
-  glob?: boolean;
-};
-export type ExtraFile =
-  | string
-  | ExtraJsonFile
-  | ExtraYamlFile
-  | ExtraXmlFile
-  | ExtraPomFile
-  | ExtraTomlFile;
-/**
- * These are configurations provided to each strategy per-path.
- */
-export interface ReleaserConfig {
-  releaseType: ReleaseType;
-
-  // Versioning config
-  versioning?: VersioningStrategyType;
-  bumpMinorPreMajor?: boolean;
-  bumpPatchForMinorPreMajor?: boolean;
-
-  // Strategy options
-  releaseAs?: string;
-  skipGithubRelease?: boolean; // Note this should be renamed to skipGitHubRelease in next major release
-  draft?: boolean;
-  prerelease?: boolean;
-  draftPullRequest?: boolean;
-  component?: string;
-  packageName?: string;
-  includeComponentInTag?: boolean;
-  includeVInTag?: boolean;
-  pullRequestTitlePattern?: string;
-  pullRequestHeader?: string;
-  tagSeparator?: string;
-  separatePullRequests?: boolean;
-  labels?: string[];
-  releaseLabels?: string[];
-  extraLabels?: string[];
-  initialVersion?: string;
-
-  // Changelog options
-  changelogSections?: ChangelogSection[];
-  changelogPath?: string;
-  changelogType?: ChangelogNotesType;
-  changelogHost?: string;
-
-  // Ruby-only
-  versionFile?: string;
-  // Java-only
-  extraFiles?: ExtraFile[];
-  snapshotLabels?: string[];
-  skipSnapshot?: boolean;
-  // Manifest only
-  excludePaths?: string[];
-}
-
-export interface CandidateReleasePullRequest {
-  path: string;
-  pullRequest: ReleasePullRequest;
-  config: ReleaserConfig;
-}
+import {
+  CandidateReleasePullRequest,
+  ChangelogSection,
+  ExtraFile,
+  PluginType,
+  PullRequestOverflowHandler,
+  ReleaserConfig,
+  ReleaseType,
+  RepositoryConfig,
+} from './types';
+import {
+  DEFAULT_COMMIT_SEARCH_DEPTH,
+  DEFAULT_COMPONENT_NAME,
+  DEFAULT_LABELS,
+  DEFAULT_RELEASE_LABELS,
+  DEFAULT_RELEASE_PLEASE_CONFIG,
+  DEFAULT_RELEASE_PLEASE_MANIFEST,
+  DEFAULT_RELEASE_SEARCH_DEPTH,
+  DEFAULT_SNAPSHOT_LABELS,
+  ROOT_PROJECT_PATH,
+  SNOOZE_LABEL,
+} from './constants';
+import {buildPlugin} from './factories/plugin-factory';
 
 export interface CandidateRelease extends Release {
   pullRequest: PullRequest;
@@ -202,34 +131,6 @@ export interface ReleaserPackageConfig extends ReleaserConfigJson {
   'changelog-path'?: string;
 }
 
-export type DirectPluginType = string;
-export interface ConfigurablePluginType {
-  type: string;
-}
-export interface LinkedVersionPluginConfig extends ConfigurablePluginType {
-  type: 'linked-versions';
-  groupName: string;
-  components: string[];
-  merge?: boolean;
-}
-export interface SentenceCasePluginConfig extends ConfigurablePluginType {
-  specialWords?: string[];
-}
-export interface WorkspacePluginConfig extends ConfigurablePluginType {
-  merge?: boolean;
-  considerAllArtifacts?: boolean;
-}
-export interface GroupPriorityPluginConfig extends ConfigurablePluginType {
-  groups: string[];
-}
-export type PluginType =
-  | DirectPluginType
-  | ConfigurablePluginType
-  | GroupPriorityPluginConfig
-  | LinkedVersionPluginConfig
-  | SentenceCasePluginConfig
-  | WorkspacePluginConfig;
-
 /**
  * This is the schema of the manifest config json
  */
@@ -246,21 +147,6 @@ export interface ManifestConfig extends ReleaserConfigJson {
 }
 // path => version
 export type ReleasedVersions = Record<string, Version>;
-// path => config
-export type RepositoryConfig = Record<string, ReleaserConfig>;
-
-export const DEFAULT_RELEASE_PLEASE_CONFIG = 'release-please-config.json';
-export const DEFAULT_RELEASE_PLEASE_MANIFEST = '.release-please-manifest.json';
-export const ROOT_PROJECT_PATH = '.';
-export const DEFAULT_COMPONENT_NAME = '';
-export const DEFAULT_LABELS = ['autorelease: pending'];
-export const DEFAULT_RELEASE_LABELS = ['autorelease: tagged'];
-export const DEFAULT_SNAPSHOT_LABELS = ['autorelease: snapshot'];
-export const SNOOZE_LABEL = 'autorelease: snooze';
-const DEFAULT_RELEASE_SEARCH_DEPTH = 400;
-const DEFAULT_COMMIT_SEARCH_DEPTH = 500;
-
-export const MANIFEST_PULL_REQUEST_TITLE_PATTERN = 'chore: release ${branch}';
 
 interface CreatedRelease extends GitHubRelease {
   id: number;

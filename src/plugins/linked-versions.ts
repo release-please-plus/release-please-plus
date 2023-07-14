@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import {ManifestPlugin} from '../plugin';
-import {RepositoryConfig, CandidateReleasePullRequest} from '../manifest';
 import {GitHub} from '../github';
 import {Logger} from '../util/logger';
 import {Strategy} from '../strategy';
@@ -23,6 +22,7 @@ import {Version} from '../version';
 import {buildStrategy} from '../factory';
 import {Merge} from './merge';
 import {BranchName} from '../util/branch-name';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../types';
 
 interface LinkedVersionsPluginOptions {
   merge?: boolean;

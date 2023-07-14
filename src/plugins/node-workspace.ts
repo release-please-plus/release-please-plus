@@ -18,7 +18,6 @@ import {
   RawManifest as PackageJson,
 } from '@lerna/package';
 import {GitHub} from '../github';
-import {CandidateReleasePullRequest, RepositoryConfig} from '../manifest';
 import {Version, VersionsMap} from '../version';
 import {RawContent} from '../updaters/raw-content';
 import {PullRequestTitle} from '../util/pull-request-title';
@@ -36,6 +35,7 @@ import {
   addPath,
 } from './workspace';
 import {PatchVersionUpdate} from '../versioning-strategy';
+import {CandidateReleasePullRequest, RepositoryConfig} from '../types';
 
 class Package extends LernaPackage {
   constructor(

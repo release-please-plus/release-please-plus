@@ -1,3 +1,0 @@
-is_global = true
-build_property.RootNamespace = Foo
-build_property.ProjectDir = c:\Data\Git\release-please-plus\test\updaters\fixtures\

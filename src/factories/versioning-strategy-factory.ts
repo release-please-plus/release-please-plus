@@ -20,8 +20,7 @@ import {AlwaysBumpMajor} from '../versioning-strategies/always-bump-major';
 import {ServicePackVersioningStrategy} from '../versioning-strategies/service-pack';
 import {GitHub} from '../github';
 import {ConfigurationError} from '../errors';
-
-export type VersioningStrategyType = string;
+import {VersioningStrategyType} from '../types';
 
 export interface VersioningStrategyFactoryOptions {
   type?: VersioningStrategyType;
