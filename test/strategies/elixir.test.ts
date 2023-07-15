@@ -14,15 +14,12 @@
 
 import {Elixir} from '../../src/strategies/elixir';
 import {buildMockConventionalCommit, assertHasUpdate} from '../helpers';
-import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';
 import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
 import {ElixirMixExs} from '../../src/updaters/elixir/elixir-mix-exs';
-
-nock.disableNetConnect();
 
 describe('Elixir', () => {
   let github: GitHub;

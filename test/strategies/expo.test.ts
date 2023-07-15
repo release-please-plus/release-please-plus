@@ -18,7 +18,6 @@ import {
   buildGitHubFileContent,
   assertHasUpdate,
 } from '../helpers';
-import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';
@@ -29,8 +28,6 @@ import {Changelog} from '../../src/updaters/changelog';
 import {PackageJson} from '../../src/updaters/node/package-json';
 import {AppJson} from '../../src/updaters/expo/app-json';
 import {when} from 'jest-when';
-
-nock.disableNetConnect();
 
 const expoFixturesPath = './test/fixtures/strategies/expo';
 

@@ -18,7 +18,6 @@ import {
   buildGitHubFileContent,
   assertHasUpdate,
 } from '../helpers';
-import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';
@@ -26,8 +25,6 @@ import {TagName} from '../../src/util/tag-name';
 import {Changelog} from '../../src/updaters/changelog';
 import {PubspecYaml} from '../../src/updaters/dart/pubspec-yaml';
 import {when} from 'jest-when';
-
-nock.disableNetConnect();
 
 const fixturesPath = './test/fixtures/strategies/dart';
 

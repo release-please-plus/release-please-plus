@@ -475,6 +475,10 @@ This PR was generated with [Release Please](https://github.com/googleapis/releas
 ]
 `;
 
+exports[`GitHub createFileOnNewBranch forks a new branch if the branch does not exist 1`] = `undefined`;
+
+exports[`GitHub createFileOnNewBranch forks a new branch if the branch does not exist 2`] = `undefined`;
+
 exports[`GitHub createRelease should create a draft release 1`] = `
 {
   "body": "Some release notes",

@@ -30,7 +30,6 @@ import {CargoWorkspace} from '../src/plugins/cargo-workspace';
 import {PullRequestTitle} from '../src/util/pull-request-title';
 import {PullRequestBody} from '../src/util/pull-request-body';
 import {RawContent} from '../src/updaters/raw-content';
-import {TagName} from '../src/util/tag-name';
 import {
   DuplicateReleaseError,
   FileNotFoundError,
@@ -38,11 +37,11 @@ import {
   GitHubAPIError,
 } from '../src/errors';
 import {RequestError} from '@octokit/request-error';
-import nock from 'nock';
 import {LinkedVersions} from '../src/plugins/linked-versions';
 import {MavenWorkspace} from '../src/plugins/maven-workspace';
+import {setupServer} from 'msw/node';
+import {rest} from 'msw';
 
-nock.disableNetConnect();
 const fixturesPath = './test/fixtures';
 
 function mockPullRequests(
@@ -1385,11 +1384,14 @@ describe('Manifest', () => {
       // In this scenario, graphQL fails with a 502 when pulling the list of
       // recent commits. We are unable to determine the latest release and thus
       // we should abort with the underlying API error.
+      const server = setupServer(
+        rest.post('https://api.github.com/graphql', (req, res, ctx) => {
+          return res(ctx.status(502));
+        })
+      );
 
-      const scope = nock('https://api.github.com/')
-        .post('/graphql')
-        .times(6) // original + 5 retries
-        .reply(502);
+      await server.listen();
+
       const sleepStub = jest
         .spyOn(githubModule, 'sleepInMs')
         .mockResolvedValue(0);
@@ -1411,7 +1413,7 @@ describe('Manifest', () => {
           );
         }
       );
-      scope.done();
+      server.close();
       expect(sleepStub).toHaveBeenCalledTimes(5);
     });
   });

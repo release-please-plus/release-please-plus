@@ -18,7 +18,6 @@ import {
   buildGitHubFileContent,
   assertHasUpdate,
 } from '../helpers';
-import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';
@@ -31,8 +30,6 @@ import {ChangelogJson} from '../../src/updaters/changelog-json';
 import * as assert from 'assert';
 import {MissingRequiredFileError, FileNotFoundError} from '../../src/errors';
 import {when} from 'jest-when';
-
-nock.disableNetConnect();
 
 const fixturesPath = './test/fixtures/strategies/node';
 
