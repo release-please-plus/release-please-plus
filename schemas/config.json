@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "release-please manifest config schema",
+  "title": "release-please-plus manifest config schema",
   "description": "Schema for defining manifest config file",
   "type": "object",
   "additionalProperties": false,
@@ -290,7 +290,11 @@
                   "type": {
                     "description": "The name of the plugin.",
                     "type": "string",
-                    "enum": ["cargo-workspace", "maven-workspace", "node-workspace"]
+                    "enum": [
+                      "cargo-workspace",
+                      "maven-workspace",
+                      "node-workspace"
+                    ]
                   },
                   "updateAllPackages": {
                     "description": "Whether to force updating all packages regardless of the dependency tree. Defaults to `false`.",

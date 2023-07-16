@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {parser, handleError} from '../src/bin/release-please';
+import {parser, handleError} from '../src/bin/release-please-plus';
 import {Manifest} from '../src/manifest';
 import {GitHub} from '../src/github';
 import {ParseCallback} from 'yargs';

@@ -1,9 +1,9 @@
 {
   "name": "release-please-plus",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "generate release PRs based on the conventionalcommits.org spec",
   "main": "./build/src/index.js",
-  "bin": "./build/src/bin/release-please.js",
+  "bin": "./build/src/bin/release-please-plus.js",
   "scripts": {
     "test": "cross-env LC_ALL=en jest",
     "test:update": "cross-env LC_ALL=en jest --update",
@@ -25,6 +25,8 @@
   "repository": "release-please-plus/release-please-plus",
   "keywords": [
     "release",
+    "release-please",
+    "release-please-plus",
     "conventional-commits"
   ],
   "author": "John Campion",
