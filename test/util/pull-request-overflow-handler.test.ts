@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import nock from 'nock';
-
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {GitHub} from '../../src';
@@ -24,7 +22,6 @@ import {buildGitHubFileRaw} from '../helpers';
 import {when} from 'jest-when';
 import {PullRequestOverflowHandler} from '../../src/types';
 
-nock.disableNetConnect();
 const fixturesPath = './test/fixtures/release-notes';
 
 describe('FilePullRequestOverflowHandler', () => {

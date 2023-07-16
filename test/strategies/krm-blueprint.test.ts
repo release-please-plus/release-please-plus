@@ -19,7 +19,6 @@ import {
   assertHasUpdate,
   assertNoHasUpdate,
 } from '../helpers';
-import nock from 'nock';
 
 import {GitHub} from '../../src/github';
 import {Version} from '../../src/version';
@@ -27,8 +26,6 @@ import {TagName} from '../../src/util/tag-name';
 import {KRMBlueprintVersion} from '../../src/updaters/krm/krm-blueprint-version';
 import {Changelog} from '../../src/updaters/changelog';
 import {when} from 'jest-when';
-
-nock.disableNetConnect();
 
 const fixturesPath = './test/fixtures/strategies/krm-blueprint';
 

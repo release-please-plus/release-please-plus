@@ -12,15 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import nock from 'nock';
 import 'jest-extended';
 import {safeSnapshot} from '../helpers';
 import {PullRequestBody} from '../../src/util/pull-request-body';
 import {Version} from '../../src/version';
 import {GitHubChangelogNotes} from '../../src/changelog-notes/github';
 import {GitHub} from '../../src/github';
+import {setupServer} from 'msw/node';
+import {rest} from 'msw';
 
-nock.disableNetConnect();
+const server = setupServer(
+  rest.post(
+    'https://api.github.com/repos/fake-owner/fake-repo/releases/generate-notes',
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          name: 'Release v1.0.0 is now available!',
+          body: '##Changes in Release v1.0.0 ... ##Contributors @monalisa',
+        })
+      );
+    }
+  )
+);
 
 describe('GitHubChangelogNotes', () => {
   const commits = [
@@ -75,13 +89,10 @@ describe('GitHubChangelogNotes', () => {
         defaultBranch: 'main',
         token: 'fake-token',
       });
-      nock('https://api.github.com/')
-        .post('/repos/fake-owner/fake-repo/releases/generate-notes')
-        .reply(200, {
-          name: 'Release v1.0.0 is now available!',
-          body: '##Changes in Release v1.0.0 ... ##Contributors @monalisa',
-        });
     });
+    afterEach(() => server.resetHandlers());
+    beforeAll(() => server.listen());
+    afterAll(() => server.close());
     it('should build release notes from GitHub', async () => {
       const changelogNotes = new GitHubChangelogNotes(github);
       const notes = await changelogNotes.buildNotes(commits, notesOptions);

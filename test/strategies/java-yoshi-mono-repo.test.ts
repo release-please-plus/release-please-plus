@@ -29,9 +29,7 @@ import {VersionsManifest} from '../../src/updaters/java/versions-manifest';
 import {CompositeUpdater} from '../../src/updaters/composite';
 import {when} from 'jest-when';
 
-import nock from 'nock';
 import {FileNotFoundError} from '../../src/errors';
-nock.disableNetConnect();
 
 const fixturesPath = './test/fixtures/strategies/java-yoshi';
 

@@ -5,7 +5,7 @@
   "main": "./build/src/index.js",
   "bin": "./build/src/bin/release-please.js",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=\"--no-experimental-fetch\" LC_ALL=en jest",
+    "test": "cross-env LC_ALL=en jest",
     "test:update": "cross-env LC_ALL=en jest --update",
     "docs": "echo add docs tests",
     "clean": "gts clean",
@@ -22,12 +22,12 @@
     "!build/src/**/*.map",
     "schemas"
   ],
-  "repository": "googleapis/release-please",
+  "repository": "release-please-plus/release-please-plus",
   "keywords": [
     "release",
     "conventional-commits"
   ],
-  "author": "Google Inc.",
+  "author": "John Campion",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/release-please-plus/release-please-plus/issues"
@@ -57,9 +57,7 @@
     "jest-create-mock-instance": "^2.0.0",
     "jest-extended": "^4.0.0",
     "jest-when": "^3.5.2",
-    "nock": "^13.0.0",
-    "node-fetch": "^2.0.0",
-    "ts-jest": "^29.1.1"
+    "msw": "^1.2.2"
   },
   "dependencies": {
     "@conventional-commits/parser": "^0.4.1",

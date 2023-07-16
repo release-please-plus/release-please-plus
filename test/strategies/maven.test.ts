@@ -26,9 +26,6 @@ import {Maven} from '../../src/strategies/maven';
 import {PomXml} from '../../src/updaters/java/pom-xml';
 import {TagName} from '../../src/util/tag-name';
 import {Version} from '../../src/version';
-import nock from 'nock';
-
-nock.disableNetConnect();
 
 const COMMITS = [
   ...buildMockConventionalCommit('fix(deps): update dependency'),
