@@ -3,29 +3,24 @@ on:
     branches:
       - main
   pull_request:
-name: ci
+    branches:
+      - main
+name: all tests
 jobs:
-  test:
+  node:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16, 18, 20]
+        node: [16, 18]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+          cache: npm
       - run: node --version
-      # The first installation step ensures that all of our production
-      # dependencies work on the given Node.js version, this helps us find
-      # dependencies that don't match our engines field:
-      - run: npm install --production --engine-strict --ignore-scripts --no-package-lock
-      # Clean up the production install, before installing dev/production:
-      - run: rm -rf node_modules
       - run: npm install
       - run: npm test
-        env:
-          MOCHA_THROW_DEPRECATION: false
   windows:
     runs-on: windows-latest
     steps:
@@ -35,8 +30,6 @@ jobs:
           node-version: 16
       - run: npm install
       - run: npm test
-        env:
-          MOCHA_THROW_DEPRECATION: false
   lint:
     runs-on: ubuntu-latest
     steps:

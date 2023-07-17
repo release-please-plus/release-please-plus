@@ -9,11 +9,11 @@
     "test:update": "cross-env LC_ALL=en jest --update",
     "docs": "echo add docs tests",
     "clean": "gts clean",
-    "prepare": "npm run compile",
+    "prepare": "npm run build",
     "lint": "gts check",
-    "compile": "tsc -p .",
+    "build": "tsc -p .",
     "fix": "gts fix",
-    "pretest": "npm run compile",
+    "pretest": "npm run build",
     "circular": "npx --yes madge --extensions ts --circular ./src"
   },
   "files": [

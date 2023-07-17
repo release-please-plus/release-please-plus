@@ -1359,7 +1359,9 @@ describe('GitHub', () => {
         rest.patch(
           'https://api.github.com/repos/fake/fake/git/refs/heads%2Fnew-branch',
           (req, res, ctx) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((req.body as any).force).toBe(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             expect((req.body as any).sha).toEqual('abc123');
 
             return res(
