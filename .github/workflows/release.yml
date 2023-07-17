@@ -1,0 +1,67 @@
+on:
+  push:
+    branches:
+      - main
+name: release
+jobs:
+  test:
+    name: test prior to release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - run: npm install
+      - run: npm test
+  release:
+    name: release-please-plus
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: 18
+          cache: npm
+      # Now that we know the build runs, create a release PR if needed.
+      - uses: release-please-plus/action@main
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # command: manifest
+          bootstrap-sha: 49378742ab359c14fa39fd3cb5d317d95c436948
+          release-type: node
+          plugins: sentence-case
+          changelog-types: >
+            [
+              { "type": "feat", "section": "✨ Features" },
+              { "type": "feature", "section": "✨ Features" },
+              { "type": "perf", "section": "⚡️Performance Improvements" },
+              { "type": "fix", "section": "🐛 Bug Fixes" },
+              { "type": "revert", "section": "⏪️ Reverts" },
+              { "type": "docs", "section": "📝 Documentation" },
+              { "type": "style", "section": "🎨 Styles" },
+              { "type": "chore", "section": "🏡 Miscellaneous Chores" },
+              { "type": "refactor", "section": "♻️ Code Refactoring", "hidden": true },
+              { "type": "test", "section": "✅ Tests", "hidden": true },
+              { "type": "build", "section": "📦️ Build System", "hidden": true },
+              { "type": "ci", "section": "🤖 Continuous Integration", "hidden": true }
+            ]
+          extra-files: |
+            { "type": "xml", "path": "src/Test.csproj", "xpath": "//project/propertygroup/version" }
+            { "type": "xml", "path": "src/Directory.Build.props", "xpath": "//project/propertygroup/version" }
+      - name: Publish to NPM
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          npm install
+          npm run build
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

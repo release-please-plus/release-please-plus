@@ -28,7 +28,6 @@ import {GenericXml} from '../../src/updaters/generic-xml';
 import {PomXml} from '../../src/updaters/java/pom-xml';
 import {GenericYaml} from '../../src/updaters/generic-yaml';
 import {GenericToml} from '../../src/updaters/generic-toml';
-import {when} from 'jest-when';
 
 class TestStrategy extends BaseStrategy {
   async buildUpdates(): Promise<Update[]> {
