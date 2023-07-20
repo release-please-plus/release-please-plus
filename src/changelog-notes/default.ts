@@ -156,9 +156,9 @@ export class DefaultChangelogNotes implements ChangelogNotes {
           //   e => !e.includes('noreply.github.com')
           // );
           // const email = _email ? `<${_email}>` : '';
-          const github = i.github
-            ? `([@${i.github}](http://github.com/${i.github}))`
-            : '';
+          // ? `([@${i.github}](http://github.com/${i.github}))`
+          // github will add hover card and link automatically
+          const github = i.github ? `(@${i.github})` : '';
           return `* ${i.name} ${github}`;
         })
       );
