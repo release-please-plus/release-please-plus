@@ -25,11 +25,19 @@ import * as parser from '@conventional-commits/parser';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const conventionalCommitsFilter = require('conventional-commits-filter');
 
+export interface GitActor {
+  name: string;
+  email: string;
+  user: string;
+  avatarUrl: string;
+}
+
 export interface Commit {
   sha: string;
   message: string;
   files?: string[];
   pullRequest?: PullRequest;
+  author?: GitActor;
 }
 
 export interface ConventionalCommit extends Commit {

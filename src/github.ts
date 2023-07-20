@@ -14,7 +14,7 @@
 
 import {createPullRequest} from 'code-suggester';
 import {PullRequest} from './pull-request';
-import {Commit} from './commit';
+import {Commit, GitActor} from './commit';
 
 import {Octokit} from '@octokit/rest';
 import {request} from '@octokit/request';
@@ -89,6 +89,7 @@ type CommitFilter = (commit: Commit) => boolean;
 interface GraphQLCommit {
   sha: string;
   message: string;
+  author: GitActor;
   associatedPullRequests: {
     nodes: GraphQLPullRequest[];
   };
@@ -432,7 +433,12 @@ export class GitHub {
                     }
                   }
                   sha: oid
-                  message
+                  message,
+                  author {
+                    name
+                    email
+                    avatarUrl
+                  }
                 }
                 pageInfo {
                   hasNextPage
@@ -479,6 +485,7 @@ export class GitHub {
       const commit: Commit = {
         sha: graphCommit.sha,
         message: graphCommit.message,
+        author: graphCommit.author,
       };
       const pullRequest = graphCommit.associatedPullRequests.nodes.find(pr => {
         return pr.mergeCommit && pr.mergeCommit.oid === graphCommit.sha;
