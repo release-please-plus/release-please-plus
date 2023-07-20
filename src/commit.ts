@@ -28,7 +28,7 @@ const conventionalCommitsFilter = require('conventional-commits-filter');
 export interface GitActor {
   name: string;
   email: string;
-  user: string;
+  user: {login: string};
   avatarUrl: string;
 }
 
@@ -388,6 +388,7 @@ export function parseConventionalCommits(
             parsedCommit.notes.filter(note => note.title === 'BREAKING CHANGE')
               .length > 0;
           conventionalCommits.push({
+            author: commit.author,
             sha: commit.sha,
             message: parsedCommit.header,
             files: commit.files,

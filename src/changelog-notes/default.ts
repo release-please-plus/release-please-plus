@@ -15,6 +15,7 @@
 import {ChangelogNotes, BuildNotesOptions} from '../changelog-notes';
 import {ConventionalCommit} from '../commit';
 import {ChangelogSection} from '../types';
+import {fetch} from 'node-fetch-native';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const conventionalChangelogWriter = require('conventional-changelog-writer');
@@ -100,9 +101,73 @@ export class DefaultChangelogNotes implements ChangelogNotes {
       };
     });
 
-    return conventionalChangelogWriter
+    let result = conventionalChangelogWriter
       .parseArray(changelogCommits, context, preset.writerOpts)
-      .trim();
+      .trim() as string;
+
+    const _authors = new Map<string, {email: Set<string>; github?: string}>();
+    for (const commit of commits) {
+      if (!commit.author) {
+        continue;
+      }
+      const name = formatName(commit.author.name);
+      if (!name || name.includes('[bot]')) {
+        continue;
+      }
+      if (_authors.has(name)) {
+        const entry = _authors.get(name);
+        entry!.email.add(commit.author.email);
+      } else {
+        _authors.set(name, {
+          email: new Set([commit.author.email]),
+          github: commit.author?.user?.login,
+        });
+      }
+    }
+
+    // Try to map authors to github usernames
+    await Promise.all(
+      [..._authors.keys()].map(async authorName => {
+        const meta = _authors.get(authorName);
+        for (const email of meta!.email) {
+          if (!meta?.github) {
+            const {user} = await fetch(`https://ungh.cc/users/find/${email}`)
+              .then(r => r.json())
+              .catch(() => ({user: null}));
+            if (user) {
+              meta!.github = user.username;
+              break;
+            }
+          }
+        }
+      })
+    );
+
+    const authors = [..._authors.entries()].map(e => ({name: e[0], ...e[1]}));
+    const markdown: string[] = [];
+    if (authors.length > 0) {
+      //  Gitmoji
+      // '### ❤️  Contributors',
+      markdown.push(
+        '### Contributors',
+        '',
+        ...authors.map(i => {
+          // const _email = [...i.email].find(
+          //   e => !e.includes('noreply.github.com')
+          // );
+          // const email = _email ? `<${_email}>` : '';
+          const github = i.github
+            ? `([@${i.github}](http://github.com/${i.github}))`
+            : '';
+          return `* ${i.name} ${github}`;
+        })
+      );
+      result += '\n\n';
+      result += markdown.join('\n').trim();
+    }
+    //gitmoji
+    // convert(markdown.join('\n').trim(), true);
+    return result;
   }
 }
 
@@ -121,4 +186,17 @@ function replaceIssueLink(
 
 function htmlEscape(message: string): string {
   return message.replace('<', '&lt;').replace('>', '&gt;');
+}
+
+function formatName(name = '') {
+  return name
+    .split(' ')
+    .map(p => upperFirst(p.trim()))
+    .join(' ');
+}
+
+export function upperFirst<S extends string>(string_: S): Capitalize<S> {
+  return (
+    !string_ ? '' : string_[0].toUpperCase() + string_.slice(1)
+  ) as Capitalize<S>;
 }

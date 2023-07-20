@@ -438,6 +438,9 @@ export class GitHub {
                     name
                     email
                     avatarUrl
+                    user { 
+                      login
+                    }
                   }
                 }
                 pageInfo {
